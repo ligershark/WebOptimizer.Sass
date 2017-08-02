@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+      <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\WebOptimizer.Sass.xml</DocumentationFile>
+      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+      <PackageTags>sass, scss, bundle, minify, optimize, asp.net core</PackageTags>
+      <Version>1.0.0-beta</Version>
+      <Authors>LigerShark</Authors>
+      <Company>LigerShark</Company>
+      <Description>Compiles Sass and Scss files for the LigerShark.WebOptimizer.Core system.</Description>
+      <Copyright>Copyright © LigerShark</Copyright>
+      <PackageId>LigerShark.WebOptimizer.Sass</PackageId>
+      <Product>LigerShark.WebOptimizer.Sass</Product>
+      <PackageIconUrl>https://raw.githubusercontent.com/ligershark/WebOptimizer/master/art/logo64x64.png</PackageIconUrl>
+      <PackageProjectUrl>https://github.com/ligershark/WebOptimizer.Sass</PackageProjectUrl>
+      <PackageLicenseUrl>https://github.com/ligershark/WebOptimizer.Sass/blob/master/LICENSE.txt</PackageLicenseUrl>
+      <RepositoryUrl>https://github.com/ligershark/WebOptimizer.Sass</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="1.0.73-beta" />
+    <PackageReference Include="SharpScss" Version="1.3.7" />
+  </ItemGroup>
+
+</Project>
