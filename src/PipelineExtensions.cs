@@ -43,7 +43,22 @@ namespace WebOptimizer.Sass
                            .CompileScss()
                            .AdjustRelativePaths()
                            .Concatinate()
-                           .CssFingerprint();
+                           .CssFingerprint()
+                           .MinifyCss();
+        }
+
+        /// <summary>
+        /// Compiles .scss files into CSS and makes them servable in the browser.
+        /// </summary>
+        /// <param name="pipeline">The asset pipeline.</param>
+        /// <returns></returns>
+        public static IAsset AddScss(this IAssetPipeline pipeline)
+        {
+            return pipeline.AddFileExtension(".scss", "text/css")
+                           .CompileScss()
+                           .AdjustRelativePaths()
+                           .CssFingerprint()
+                           .MinifyCss();
         }
     }
 }
