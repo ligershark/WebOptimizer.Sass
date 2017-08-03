@@ -55,7 +55,6 @@ namespace WebOptimizer.Sass
         {
             return pipeline.AddFileExtension(".scss", "text/css")
                            .CompileScss()
-                           .AdjustRelativePaths()
                            .CssFingerprint()
                            .MinifyCss();
         }

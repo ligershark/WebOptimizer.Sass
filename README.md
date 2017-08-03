@@ -12,3 +12,12 @@ services.AddWebOptimizer(assets =>
     assets.AddScss("/all.css", "css/a.scss", "css/b.scss");
 });
 ```
+
+You can also reference any .scss files directly and a compiled and minified CSS document will be served. To set that up, do this:
+
+```c#
+services.AddWebOptimizer(assets =>
+{
+    assets.AddScss();
+});
+```
