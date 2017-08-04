@@ -39,11 +39,11 @@ namespace WebOptimizer.Sass
         /// <param name="sourceFiles">The path to the .sass or .scss source files to compile.</param>
         public static IAsset AddScss(this IAssetPipeline pipeline, string route, params string[] sourceFiles)
         {
-            return pipeline.Add(route, "text/css", sourceFiles)
+            return pipeline.AddBundle(route, "text/css", sourceFiles)
                            .CompileScss()
                            .AdjustRelativePaths()
                            .Concatinate()
-                           .CssFingerprint()
+                           .FingerprintUrls()
                            .MinifyCss();
         }
 
@@ -55,7 +55,7 @@ namespace WebOptimizer.Sass
         {
             return pipeline.AddFileExtension(".scss", "text/css")
                            .CompileScss()
-                           .CssFingerprint()
+                           .FingerprintUrls()
                            .MinifyCss();
         }
     }

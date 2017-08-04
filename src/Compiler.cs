@@ -23,16 +23,16 @@ namespace WebOptimizer.Sass
         public Task ExecuteAsync(IAssetContext context)
         {
             var pipeline = (IAssetPipeline)context.HttpContext.RequestServices.GetService(typeof(IAssetPipeline));
-            var content = new Dictionary<string, string>();
+            var content = new Dictionary<string, byte[]>();
 
             foreach (string route in context.Content.Keys)
             {
                 IFileInfo file = pipeline.FileProvider.GetFileInfo(route);
                 var options = new ScssOptions { InputFile = file.PhysicalPath };
 
-                ScssResult result = Scss.ConvertToCss(context.Content[route], options);
+                ScssResult result = Scss.ConvertToCss(context.Content[route].AsString(), options);
 
-                content[route] = result.Css;
+                content[route] = result.Css.AsByteArray();
             }
 
             context.Content = content;

@@ -1,6 +1,5 @@
 using Microsoft.Extensions.FileProviders.Physical;
 using Moq;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,8 +16,8 @@ namespace WebOptimizer.Sass.Test
             var processor = new Compiler();
             var pipeline = new Mock<IAssetPipeline>().SetupAllProperties();
             var context = new Mock<IAssetContext>().SetupAllProperties();
-            context.Object.Content = new Dictionary<string, string> {
-                { "/file.css", "$bg: blue; div {background: $bg}" },
+            context.Object.Content = new Dictionary<string, byte[]> {
+                { "/file.css", "$bg: blue; div {background: $bg}".AsByteArray() },
             };
 
             context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IAssetPipeline)))
@@ -32,7 +31,7 @@ namespace WebOptimizer.Sass.Test
 
             await processor.ExecuteAsync(context.Object);
             var result = context.Object.Content.First().Value;
-            Assert.Equal("div {\n  background: blue; }\n", result);
+            Assert.Equal("div {\n  background: blue; }\n", result.AsString());
         }
     }
 }
