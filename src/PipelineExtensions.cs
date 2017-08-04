@@ -51,7 +51,7 @@ namespace WebOptimizer.Sass
         /// Compiles .scss files into CSS and makes them servable in the browser.
         /// </summary>
         /// <param name="pipeline">The asset pipeline.</param>
-        public static IAsset CompileScss(this IAssetPipeline pipeline)
+        public static IAsset CompileScssFiles(this IAssetPipeline pipeline)
         {
             return pipeline.AddFileExtension(".scss", "text/css")
                            .CompileScss()
