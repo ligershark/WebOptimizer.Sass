@@ -58,5 +58,27 @@ namespace WebOptimizer.Sass
                            .FingerprintUrls()
                            .MinifyCss();
         }
+
+        /// <summary>
+        /// Compiles the specified .scss files into CSS and makes them servable in the browser.
+        /// </summary>
+        /// <param name="pipeline">The pipeline object.</param>
+        /// <param name="sourceFiles">A list of relative file names of the sources to compile.</param>
+        public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, params string[] sourceFiles)
+        {
+            var list = new List<IAsset>();
+
+            foreach (string file in sourceFiles)
+            {
+                IAsset asset = pipeline.AddBundle(file, "text/css", new[] { file })
+                         .CompileScss()
+                         .FingerprintUrls()
+                         .MinifyCss();
+
+                list.Add(asset);
+            }
+
+            return list;
+        }
     }
 }
