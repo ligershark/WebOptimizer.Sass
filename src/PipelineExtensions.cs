@@ -37,7 +37,7 @@ namespace WebOptimizer.Sass
         /// <param name="pipeline">The asset pipeline.</param>
         /// <param name="route">The route where the compiled .css file will be available from.</param>
         /// <param name="sourceFiles">The path to the .sass or .scss source files to compile.</param>
-        public static IAsset AddScss(this IAssetPipeline pipeline, string route, params string[] sourceFiles)
+        public static IAsset AddScssBundle(this IAssetPipeline pipeline, string route, params string[] sourceFiles)
         {
             return pipeline.AddBundle(route, "text/css", sourceFiles)
                            .CompileScss()
@@ -51,7 +51,7 @@ namespace WebOptimizer.Sass
         /// Compiles .scss files into CSS and makes them servable in the browser.
         /// </summary>
         /// <param name="pipeline">The asset pipeline.</param>
-        public static IAsset AddScss(this IAssetPipeline pipeline)
+        public static IAsset CompileScss(this IAssetPipeline pipeline)
         {
             return pipeline.AddFileExtension(".scss", "text/css")
                            .CompileScss()
