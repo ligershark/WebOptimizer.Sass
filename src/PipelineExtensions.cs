@@ -39,7 +39,7 @@ namespace WebOptimizer.Sass
         /// <param name="sourceFiles">The path to the .sass or .scss source files to compile.</param>
         public static IAsset AddScssBundle(this IAssetPipeline pipeline, string route, params string[] sourceFiles)
         {
-            return pipeline.AddBundle(route, "text/css", sourceFiles)
+            return pipeline.AddBundle(route, "text/css; charset=UTF-8", sourceFiles)
                            .CompileScss()
                            .AdjustRelativePaths()
                            .Concatinate()
@@ -53,7 +53,7 @@ namespace WebOptimizer.Sass
         /// <param name="pipeline">The asset pipeline.</param>
         public static IAsset CompileScssFiles(this IAssetPipeline pipeline)
         {
-            return pipeline.AddFileExtension(".scss", "text/css")
+            return pipeline.AddFileExtension(".scss", "text/css; charset=UTF-8")
                            .CompileScss()
                            .FingerprintUrls()
                            .MinifyCss();
@@ -66,19 +66,10 @@ namespace WebOptimizer.Sass
         /// <param name="sourceFiles">A list of relative file names of the sources to compile.</param>
         public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, params string[] sourceFiles)
         {
-            var list = new List<IAsset>();
-
-            foreach (string file in sourceFiles)
-            {
-                IAsset asset = pipeline.AddBundle(file, "text/css", new[] { file })
-                         .CompileScss()
-                         .FingerprintUrls()
-                         .MinifyCss();
-
-                list.Add(asset);
-            }
-
-            return list;
+            return pipeline.AddFiles("text/css", sourceFiles)
+                           .CompileScss()
+                           .FingerprintUrls()
+                           .MinifyCss();
         }
     }
 }
