@@ -22,11 +22,11 @@ services.AddWebOptimizer(pipeline =>
 });
 ```
 
-Or if you just want to parse specific markdown files, do this:
+Or if you just want to parse specific .scss files, do this:
 
 ```c#
 services.AddWebOptimizer(pipeline =>
 {
-    pipeline.CompileScssFiles("/path/file1.md", "/path/file2.md");
+    pipeline.CompileScssFiles("/path/file1.scss", "/path/file2.scss");
 });
 ```
