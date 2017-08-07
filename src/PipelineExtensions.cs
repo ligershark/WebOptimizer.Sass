@@ -42,7 +42,7 @@ namespace WebOptimizer.Sass
             return pipeline.AddBundle(route, "text/css; charset=UTF-8", sourceFiles)
                            .CompileScss()
                            .AdjustRelativePaths()
-                           .Concatinate()
+                           .Concatenate()
                            .FingerprintUrls()
                            .MinifyCss();
         }
@@ -51,9 +51,9 @@ namespace WebOptimizer.Sass
         /// Compiles .scss files into CSS and makes them servable in the browser.
         /// </summary>
         /// <param name="pipeline">The asset pipeline.</param>
-        public static IAsset CompileScssFiles(this IAssetPipeline pipeline)
+        public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline)
         {
-            return pipeline.AddFileExtension(".scss", "text/css; charset=UTF-8")
+            return pipeline.AddFiles("text/css; charset=UTF-8", "**/*.scss")
                            .CompileScss()
                            .FingerprintUrls()
                            .MinifyCss();
@@ -66,7 +66,7 @@ namespace WebOptimizer.Sass
         /// <param name="sourceFiles">A list of relative file names of the sources to compile.</param>
         public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, params string[] sourceFiles)
         {
-            return pipeline.AddFiles("text/css", sourceFiles)
+            return pipeline.AddFiles("text/css; charset=UFT-8", sourceFiles)
                            .CompileScss()
                            .FingerprintUrls()
                            .MinifyCss();
