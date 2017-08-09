@@ -8,16 +8,29 @@ This package compiles Sass/Scss into CSS by hooking into the [LigerShark.WebOpti
 
 Here's an example of how to compile `a.scss` and `b.scss` and bundle them into a single .css file called `/all.css`:
 
-```c#
-services.AddWebOptimizer(pipeline =>
+In **Startup.cs**, add two using statements:
+
+```csharp
+using WebOptimizer.Core;
+using WebOptimizer.Sass;
+```
+
+...and then modify the *ConfigureServices* method:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
 {
-    pipeline.AddScssBundle("/all.css", "css/a.scss", "css/b.scss");
-});
+    services.AddMvc();
+    services.AddWebOptimizer(pipeline =>
+    {
+        pipeline.AddScssBundle("/all.css", "a.scss", "b.scss");
+    });
+}
 ```
 
 You can also reference any .scss files directly and a compiled and minified CSS document will be served. To set that up, do this:
 
-```c#
+```csharp
 services.AddWebOptimizer(pipeline =>
 {
     pipeline.CompileScssFiles();
@@ -26,7 +39,7 @@ services.AddWebOptimizer(pipeline =>
 
 Or if you just want to parse specific .scss files, do this:
 
-```c#
+```csharp
 services.AddWebOptimizer(pipeline =>
 {
     pipeline.CompileScssFiles("/path/file1.scss", "/path/file2.scss");
