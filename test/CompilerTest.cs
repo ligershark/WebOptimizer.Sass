@@ -31,7 +31,10 @@ namespace WebOptimizer.Sass.Test
             options.Setup(s => s.FileProvider.GetFileInfo(It.IsAny<string>()))
                   .Returns(inputFile);
 
-            await processor.ExecuteAsync(context.Object, options.Object);
+            context.Setup(c => c.Options)
+                   .Returns(options.Object);
+
+            await processor.ExecuteAsync(context.Object);
             var result = context.Object.Content.First().Value;
             Assert.Equal("div {\n  background: blue; }\n", result.AsString());
         }

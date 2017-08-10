@@ -20,14 +20,13 @@ namespace WebOptimizer.Sass
         /// <summary>
         /// Executes the processor on the specified configuration.
         /// </summary>
-        public Task ExecuteAsync(IAssetContext context, WebOptimizerOptions options)
+        public Task ExecuteAsync(IAssetContext context)
         {
-            var pipeline = (IAssetPipeline)context.HttpContext.RequestServices.GetService(typeof(IAssetPipeline));
             var content = new Dictionary<string, byte[]>();
 
             foreach (string route in context.Content.Keys)
             {
-                IFileInfo file = options.FileProvider.GetFileInfo(route);
+                IFileInfo file = context.Options.FileProvider.GetFileInfo(route);
                 var settings = new ScssOptions { InputFile = file.PhysicalPath };
 
                 ScssResult result = Scss.ConvertToCss(context.Content[route].AsString(), settings);
