@@ -16,7 +16,7 @@ Here's an example of how to compile `a.scss` and `b.scss` and bundle them into a
 In **Startup.cs**, add two using statements:
 
 ```csharp
-using WebOptimizer.Core;
+using WebOptimizer;
 using WebOptimizer.Sass;
 ```
 
