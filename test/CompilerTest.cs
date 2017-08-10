@@ -26,10 +26,12 @@ namespace WebOptimizer.Sass.Test
             string temp = Path.GetTempPath();
             var inputFile = new PhysicalFileInfo(new FileInfo("site.css"));
 
-            pipeline.Setup(s => s.FileProvider.GetFileInfo(It.IsAny<string>()))
+            var options = new Mock<WebOptimizerOptions>().SetupAllProperties();
+
+            options.Setup(s => s.FileProvider.GetFileInfo(It.IsAny<string>()))
                   .Returns(inputFile);
 
-            await processor.ExecuteAsync(context.Object);
+            await processor.ExecuteAsync(context.Object, options.Object);
             var result = context.Object.Content.First().Value;
             Assert.Equal("div {\n  background: blue; }\n", result.AsString());
         }
