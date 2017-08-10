@@ -11,7 +11,7 @@ Add the NuGet package [LigerShark.WebOptimizer.Sass](https://nuget.org/packages/
 > &gt; dotnet add package LigerShark.WebOptimizer.Sass
 
 ## Usage
-Here's an example of how to compile `a.scss` and `b.scss` and bundle them into a single .css file called `/all.css`:
+Here's an example of how to compile `a.scss` and `b.scss` from inside the wwwroot folder and bundle them into a single .css file called `/all.css`:
 
 In **Startup.cs**, add two using statements:
 
@@ -29,6 +29,27 @@ public void ConfigureServices(IServiceCollection services)
     services.AddWebOptimizer(pipeline =>
     {
         pipeline.AddScssBundle("/all.css", "a.scss", "b.scss");
+    });
+}
+```
+...and add `app.UseWebOptimizer()` to the `Configure` method anywhere before `app.UseStaticFiles`, like so:
+
+```csharp
+public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+
+    app.UseWebOptimizer();
+
+    app.UseStaticFiles();
+    app.UseMvc(routes =>
+    {
+        routes.MapRoute(
+            name: "default",
+            template: "{controller=Home}/{action=Index}/{id?}");
     });
 }
 ```
