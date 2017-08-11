@@ -75,7 +75,6 @@ services.AddWebOptimizer(pipeline =>
 ```
 
 ## Setup TagHelpers
-
 In `_ViewImports.cshtml` register the TagHelpers by adding `@addTagHelper *, WebOptimizer.Core` to the file. It may look something like this:
 
 ```text
