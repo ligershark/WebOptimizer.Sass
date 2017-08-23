@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileProviders.Physical;
 using Moq;
 using System.Collections.Generic;
@@ -16,23 +18,28 @@ namespace WebOptimizer.Sass.Test
             var processor = new Compiler();
             var pipeline = new Mock<IAssetPipeline>().SetupAllProperties();
             var context = new Mock<IAssetContext>().SetupAllProperties();
+            var asset = new Mock<IAsset>().SetupAllProperties();
+            var env = new Mock<IHostingEnvironment>();
+            var fileProvider = new Mock<IFileProvider>();
+
             context.Object.Content = new Dictionary<string, byte[]> {
                 { "/file.css", "$bg: blue; div {background: $bg}".AsByteArray() },
             };
 
-            context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IAssetPipeline)))
-                   .Returns(pipeline.Object);
+            context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IHostingEnvironment)))
+                   .Returns(env.Object);
 
             string temp = Path.GetTempPath();
             var inputFile = new PhysicalFileInfo(new FileInfo("site.css"));
 
-            var options = new Mock<WebOptimizerOptions>().SetupAllProperties();
+            context.SetupGet(s => s.Asset)
+                          .Returns(asset.Object);
 
-            options.Setup(s => s.FileProvider.GetFileInfo(It.IsAny<string>()))
-                  .Returns(inputFile);
+            env.SetupGet(e => e.WebRootFileProvider)
+                 .Returns(fileProvider.Object);
 
-            context.Setup(c => c.Options)
-                   .Returns(options.Object);
+            fileProvider.Setup(f => f.GetFileInfo(It.IsAny<string>()))
+                   .Returns(inputFile);
 
             await processor.ExecuteAsync(context.Object);
             var result = context.Object.Content.First().Value;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using SharpScss;
 using System.Collections.Generic;
@@ -23,10 +24,12 @@ namespace WebOptimizer.Sass
         public Task ExecuteAsync(IAssetContext context)
         {
             var content = new Dictionary<string, byte[]>();
+            var env = (IHostingEnvironment)context.HttpContext.RequestServices.GetService(typeof(IHostingEnvironment));
+            IFileProvider fileProvider = context.Asset.GetFileProvider(env);
 
             foreach (string route in context.Content.Keys)
             {
-                IFileInfo file = context.Options.FileProvider.GetFileInfo(route);
+                IFileInfo file = fileProvider.GetFileInfo(route);
                 var settings = new ScssOptions { InputFile = file.PhysicalPath };
 
                 ScssResult result = Scss.ConvertToCss(context.Content[route].AsString(), settings);
