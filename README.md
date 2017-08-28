@@ -13,14 +13,7 @@ Add the NuGet package [LigerShark.WebOptimizer.Sass](https://nuget.org/packages/
 ## Usage
 Here's an example of how to compile `a.scss` and `b.scss` from inside the wwwroot folder and bundle them into a single .css file called `/all.css`:
 
-In **Startup.cs**, add two using statements:
-
-```csharp
-using WebOptimizer;
-using WebOptimizer.Sass;
-```
-
-...and then modify the *ConfigureServices* method:
+In **Startup.cs**, modify the *ConfigureServices* method:
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
