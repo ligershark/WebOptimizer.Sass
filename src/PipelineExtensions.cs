@@ -46,6 +46,7 @@ namespace Microsoft.Extensions.DependencyInjection
                            .AdjustRelativePaths()
                            .Concatenate()
                            .FingerprintUrls()
+                           .AddResponseHeader("X-Content-Type-Options", "nosniff")
                            .MinifyCss();
         }
 
@@ -58,6 +59,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return pipeline.AddFiles("text/css; charset=UTF-8", "**/*.scss")
                            .CompileScss()
                            .FingerprintUrls()
+                           .AddResponseHeader("X-Content-Type-Options", "nosniff")
                            .MinifyCss();
         }
 
@@ -71,6 +73,7 @@ namespace Microsoft.Extensions.DependencyInjection
             return pipeline.AddFiles("text/css; charset=UFT-8", sourceFiles)
                            .CompileScss()
                            .FingerprintUrls()
+                           .AddResponseHeader("X-Content-Type-Options", "nosniff")
                            .MinifyCss();
         }
     }
