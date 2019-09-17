@@ -19,14 +19,14 @@ namespace WebOptimizer.Sass.Test
             var pipeline = new Mock<IAssetPipeline>().SetupAllProperties();
             var context = new Mock<IAssetContext>().SetupAllProperties();
             var asset = new Mock<IAsset>().SetupAllProperties();
-            var env = new Mock<IHostingEnvironment>();
+            var env = new Mock<IWebHostEnvironment>();
             var fileProvider = new Mock<IFileProvider>();
 
             context.Object.Content = new Dictionary<string, byte[]> {
                 { "/file.css", "$bg: blue; div {background: $bg}".AsByteArray() },
             };
 
-            context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IHostingEnvironment)))
+            context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)))
                    .Returns(env.Object);
 
             string temp = Path.GetTempPath();

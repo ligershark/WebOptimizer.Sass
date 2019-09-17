@@ -1,9 +1,9 @@
 image: Visual Studio 2017
-version: 1.0.{build}
+version: 3.0.{build}
 
 install:
    # .NET Core SDK binaries
-  - ps: $urlCurrent = "https://aka.ms/dotnet-sdk-2.0.0-win-x64"
+  - ps: $urlCurrent = "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/release/3.0.1xx/dotnet-sdk-latest-win-x64.zip""
   - ps: $env:DOTNET_INSTALL_DIR = "$pwd\.dotnetsdk"
   - ps: mkdir $env:DOTNET_INSTALL_DIR -Force | Out-Null
   - ps: $tempFileCurrent = [System.IO.Path]::GetTempFileName()
