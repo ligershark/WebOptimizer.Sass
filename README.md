@@ -10,6 +10,10 @@ Add the NuGet package [LigerShark.WebOptimizer.Sass](https://nuget.org/packages/
 
 > &gt; dotnet add package LigerShark.WebOptimizer.Sass
 
+## Versions
+Master is being updated for ```ASP.NET Core 3.0```
+For ```ASP.NET Core 2.x```, use the **[2.0 branch.](https://github.com/ligershark/WebOptimizer.Sass/tree/2.0)**
+
 ## Usage
 Here's an example of how to compile `a.scss` and `b.scss` from inside the wwwroot folder and bundle them into a single .css file called `/all.css`:
 
