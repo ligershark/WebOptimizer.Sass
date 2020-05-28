@@ -20,8 +20,8 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.249" />
-    <PackageReference Include="SharpScss" Version="1.4.0" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.250" />
+    <PackageReference Include="SharpScss" Version="1.5.0" />
   </ItemGroup>
 
 </Project>
