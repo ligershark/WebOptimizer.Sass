@@ -18,6 +18,26 @@ namespace WebOptimizer.Sass
         /// </summary>
         public string CacheKey(HttpContext context) => string.Empty;
 
+        private WebOptimazerScssOptions options;
+
+        /// <summary>
+        /// Gets the custom key that should be used when calculating the memory cache key.
+        /// </summary>
+        public Compiler()
+        {
+            this.options = null;
+        }
+
+        /// <summary>
+        /// Gets the custom key that should be used when calculating the memory cache key.
+        /// </summary>
+        public Compiler(WebOptimazerScssOptions options)
+        {
+           
+             this.options = options;
+        }
+
+      
         /// <summary>
         /// Executes the processor on the specified configuration.
         /// </summary>
@@ -31,6 +51,19 @@ namespace WebOptimizer.Sass
             {
                 IFileInfo file = fileProvider.GetFileInfo(route);
                 var settings = new ScssOptions { InputFile = file.PhysicalPath };
+                if(options!=null)
+                {
+                    settings.IncludePaths.AddRange(options.IncludePaths);
+                    settings.GenerateSourceMap = options.GenerateSourceMap;
+                    settings.Indent = options.Indent;
+                    settings.IsIndentedSyntaxSource = options.IsIndentedSyntaxSource;
+                    settings.Linefeed = options.Linefeed;
+                    settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
+                    settings.SourceComments = options.SourceComments;
+                    settings.SourceMapContents = options.SourceMapContents;
+                    settings.SourceMapEmbed = options.SourceMapEmbed;
+                    settings.SourceMapRoot = options.SourceMapRoot;
+                }
 
                 ScssResult result = Scss.ConvertToCss(context.Content[route].AsString(), settings);
 
