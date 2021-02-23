@@ -74,7 +74,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="sourceFiles">A list of relative file names of the sources to compile.</param>
         public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimazerScssOptions options = null, params string[] sourceFiles)
         {
-            return pipeline.AddFiles("text/css; charset=UFT-8", sourceFiles)
+            return pipeline.AddFiles("text/css; charset=UTF-8", sourceFiles)
                            .CompileScss(options)
                            .FingerprintUrls()
                            .AddResponseHeader("X-Content-Type-Options", "nosniff")
