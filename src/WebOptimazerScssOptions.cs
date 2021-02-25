@@ -2,21 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static SharpScss.ScssOptions;
 
 namespace WebOptimizer.Sass
 {
     public class WebOptimazerScssOptions
     {
-        /// <summary>
-        /// Delegates that tries to import the specified file.
-        /// </summary>
-        /// <param name="file">The file to import. The fully resolved path can be modified by this delegate by re-assigning the <paramref name="file"/> to the path fully resolved.</param>
-        /// <param name="parentPath">The path of the parent file that is trying to import <paramref name="file"/>.</param>
-        /// <param name="scss">The output scss if import was found.</param>
-        /// <param name="map">The output map if import was found. May be null</param>
-        /// <returns><c>true</c> if import was found; <c>false</c> otherwise</returns>
-        public delegate bool TryImportDelegate(ref string file, string parentPath, out string scss, out string map);
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ScssOptions"/> class.
         /// </summary>
