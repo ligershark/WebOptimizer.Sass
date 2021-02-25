@@ -63,6 +63,7 @@ namespace WebOptimizer.Sass
                     settings.SourceMapContents = options.SourceMapContents;
                     settings.SourceMapEmbed = options.SourceMapEmbed;
                     settings.SourceMapRoot = options.SourceMapRoot;
+                    settings.TryImport = options.TryImport;
                 }
 
                 ScssResult result = Scss.ConvertToCss(context.Content[route].AsString(), settings);
