@@ -14,7 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         public static IAsset CompileScss(this IAsset asset, WebOptimazerScssOptions options = null)
         {
-            asset.Processors.Add(new Compiler(options));
+            asset.Processors.Add(new Compiler(asset, options));
             return asset;
         }
 
