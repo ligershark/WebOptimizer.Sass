@@ -21,7 +21,7 @@ namespace WebOptimizer.Sass
     /// <seealso cref="WebOptimizer.IProcessor" />
     public class Compiler : IProcessor
     {
-        private const string ImportRegexPattern = "^@import ['\"]([-_a-zA-Z\\d]+)['\"];$";
+        private const string ImportRegexPattern = "^@import ['\"]([^\"']+)['\"]$";
         
         /// <summary>
         /// Gets the custom key that should be used when calculating the memory cache key.
@@ -134,13 +134,13 @@ namespace WebOptimizer.Sass
                 route = $"{route}.scss";
             }
             
-            var filePath = Path.Combine(basePath, route);
+            var filePath = PathCombine(basePath, route);
             IFileInfo file = fileProvider.GetFileInfo(filePath);
 
             // Add underscore at the start if missing
             if (!file.Exists)
             {
-                filePath = Path.Combine(basePath, $"_{route}");
+                filePath = PathCombine(basePath, $"_{route}");
                 file = fileProvider.GetFileInfo(filePath);
                 if (!file.Exists)
                 {
@@ -173,6 +173,11 @@ namespace WebOptimizer.Sass
                     }
                 }
             }
+        }
+
+        private static string PathCombine(params string[] args)
+        {
+            return Path.GetFullPath(Path.Combine(args)).Replace($"{Environment.CurrentDirectory}/", string.Empty);
         }
     }
 }
