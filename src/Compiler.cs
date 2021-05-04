@@ -21,7 +21,7 @@ namespace WebOptimizer.Sass
     /// <seealso cref="WebOptimizer.IProcessor" />
     public class Compiler : IProcessor
     {
-        private const string ImportRegexPattern = "^@import ['\"]([^\"']+)['\"]$";
+        private const string ImportRegexPattern = "^@import ['\"]([^\"']+)['\"];$";
         
         /// <summary>
         /// Gets the custom key that should be used when calculating the memory cache key.
@@ -108,7 +108,7 @@ namespace WebOptimizer.Sass
                 using var reader = new StreamReader(stream);
                 for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
                 {
-                    var match = Regex.Match(line, ImportRegexPattern);
+                    var match = Regex.Match(line.Trim(), ImportRegexPattern);
                     if (match.Success)
                     {
                         var subRoute = match.Groups.Count == 2 ? match.Groups[1].Value : string.Empty;
@@ -163,7 +163,7 @@ namespace WebOptimizer.Sass
             using var reader = new StreamReader(stream);
             for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
             {
-                var match = Regex.Match(line, ImportRegexPattern);
+                var match = Regex.Match(line.Trim(), ImportRegexPattern);
                 if (match.Success)
                 {
                     var subRoute = match.Groups.Count == 2 ? match.Groups[1].Value : string.Empty;
@@ -177,7 +177,7 @@ namespace WebOptimizer.Sass
 
         private static string PathCombine(params string[] args)
         {
-            return Path.GetFullPath(Path.Combine(args)).Replace($"{Environment.CurrentDirectory}/", string.Empty);
+            return Path.GetFullPath(Path.Combine(args)).Replace($"{Environment.CurrentDirectory}{Path.DirectorySeparatorChar}", string.Empty);
         }
     }
 }
