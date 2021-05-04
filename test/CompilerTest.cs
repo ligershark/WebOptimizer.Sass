@@ -15,10 +15,9 @@ namespace WebOptimizer.Sass.Test
         [Fact]
         public async Task Compile_Success()
         {
-            var processor = new Compiler();
-            var pipeline = new Mock<IAssetPipeline>().SetupAllProperties();
             var context = new Mock<IAssetContext>().SetupAllProperties();
             var asset = new Mock<IAsset>().SetupAllProperties();
+            var processor = new Compiler(asset.Object);
             var env = new Mock<IWebHostEnvironment>();
             var fileProvider = new Mock<IFileProvider>();
 
@@ -28,8 +27,7 @@ namespace WebOptimizer.Sass.Test
 
             context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)))
                    .Returns(env.Object);
-
-            string temp = Path.GetTempPath();
+            
             var inputFile = new PhysicalFileInfo(new FileInfo("site.css"));
 
             context.SetupGet(s => s.Asset)
