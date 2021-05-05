@@ -56,7 +56,7 @@ namespace WebOptimizer.Sass.Test
             asset.Setup(a => a.SourceFiles)
                 .Returns(new List<string>()
                 {
-                    "css/test.scss"
+                    "css/test1.scss"
                 });
             var env = new Mock<IWebHostEnvironment>();
 
@@ -64,23 +64,45 @@ namespace WebOptimizer.Sass.Test
             var fileProvider = new Mock<IFileProvider>();
             env.Setup(e => e.WebRootFileProvider)
                 .Returns(fileProvider.Object);
-            var fileInfo = new Mock<IFileInfo>();
-            fileInfo.Setup(f => f.Exists).Returns(true);
-            fileInfo.Setup(f => f.PhysicalPath).Returns("css/test1.scss");
-            fileInfo.SetupSequence(f => f.CreateReadStream())
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test1'; \r\n @import 'test2';")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test3';")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test3';")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("body { padding: 0; margin: 0; }")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("body { padding: 0; margin: 0; }")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("body { padding: 1; margin: 1; }")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("body { padding: 1; margin: 1; }")));
+            var test1 = new Mock<IFileInfo>();
+            test1.Setup(f => f.Exists).Returns(true);
+            test1.Setup(f => f.PhysicalPath).Returns("css/test1.scss");
+            test1.SetupSequence(f => f.CreateReadStream())
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test2'; \r\n @import \"test3\";")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test2'; \r\n @import \"test3\";")));
+                
+            var test2 = new Mock<IFileInfo>();
+            test2.Setup(f => f.Exists).Returns(true);
+            test2.Setup(f => f.PhysicalPath).Returns("css/test2.scss");
+            test2.SetupSequence(f => f.CreateReadStream())
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import '../test4';")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import '../test4';")));
+                
+            var test3 = new Mock<IFileInfo>();
+            test3.Setup(f => f.Exists).Returns(true);
+            test3.Setup(f => f.PhysicalPath).Returns("css/test3.scss");
+            test3.SetupSequence(f => f.CreateReadStream())
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/'); \r\n")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/'); \r\n")));
+
+            var test4 = new Mock<IFileInfo>();
+            test4.Setup(f => f.Exists).Returns(true);
+            test4.Setup(f => f.PhysicalPath).Returns("test4.scss");
+            test4.SetupSequence(f => f.CreateReadStream())
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/';")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/';")));
 
             var changeToken = new Mock<IChangeToken>();
             fileProvider.Setup(p => p.Watch(It.IsAny<string>()))
                 .Returns(changeToken.Object);
-            fileProvider.Setup(p => p.GetFileInfo(It.IsAny<string>()))
-                .Returns(fileInfo.Object);
+            fileProvider.Setup(p => p.GetFileInfo("css/test1.scss"))
+                .Returns(test1.Object);
+            fileProvider.Setup(p => p.GetFileInfo("css/test2.scss"))
+                .Returns(test2.Object);
+            fileProvider.Setup(p => p.GetFileInfo("css/test3.scss"))
+                .Returns(test3.Object);
+            fileProvider.Setup(p => p.GetFileInfo("test4.scss"))
+                .Returns(test4.Object);
             
             // Setup Cache
             var cache = new Mock<IMemoryCache>();
