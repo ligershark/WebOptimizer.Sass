@@ -75,19 +75,19 @@ namespace WebOptimizer.Sass.Test
             test2.Setup(f => f.Exists).Returns(true);
             test2.Setup(f => f.PhysicalPath).Returns("css/test2.scss");
             test2.SetupSequence(f => f.CreateReadStream())
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test4';")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test4';")));
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import '../test4';")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import '../test4';")));
                 
             var test3 = new Mock<IFileInfo>();
             test3.Setup(f => f.Exists).Returns(true);
             test3.Setup(f => f.PhysicalPath).Returns("css/test3.scss");
             test3.SetupSequence(f => f.CreateReadStream())
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/');")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/');")));
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/'); \r\n")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/'); \r\n")));
 
             var test4 = new Mock<IFileInfo>();
             test4.Setup(f => f.Exists).Returns(true);
-            test4.Setup(f => f.PhysicalPath).Returns("css/test3.scss");
+            test4.Setup(f => f.PhysicalPath).Returns("test4.scss");
             test4.SetupSequence(f => f.CreateReadStream())
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/';")))
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/';")));
@@ -101,7 +101,7 @@ namespace WebOptimizer.Sass.Test
                 .Returns(test2.Object);
             fileProvider.Setup(p => p.GetFileInfo("css/test3.scss"))
                 .Returns(test3.Object);
-            fileProvider.Setup(p => p.GetFileInfo("css/test4.scss"))
+            fileProvider.Setup(p => p.GetFileInfo("test4.scss"))
                 .Returns(test4.Object);
             
             // Setup Cache
