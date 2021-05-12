@@ -103,7 +103,7 @@ namespace WebOptimizer.Sass
             foreach (var route in _asset.SourceFiles.Where(f => f.EndsWith(".scss")))
             {
                 IFileInfo file = fileProvider.GetFileInfo(route);
-                var basePath = Path.GetDirectoryName(route);
+                var basePath = GetBasePath(route);
                 using var stream = file.CreateReadStream();
                 using var reader = new StreamReader(stream);
                 for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
@@ -186,6 +186,11 @@ namespace WebOptimizer.Sass
             return Path.GetFullPath(Path.Combine(args))
                 .Replace($"{Environment.CurrentDirectory}{Path.DirectorySeparatorChar}", string.Empty)
                 .Replace("\\", "/");
+        }
+
+        private static string GetBasePath(string path)
+        {
+            return Path.GetDirectoryName(path)?.Replace("\\", "/") ?? string.Empty;
         }
     }
 }
