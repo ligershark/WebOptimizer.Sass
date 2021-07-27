@@ -48,7 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
                            .Concatenate()
                            .FingerprintUrls()
                            .AddResponseHeader("X-Content-Type-Options", "nosniff")
-                           .MinifyCss();
+                           .minifyCssWithOptions(options);
         }
 
         public static IAsset AddScssBundle(this IAssetPipeline pipeline, string route, params string[] sourceFiles)
@@ -64,7 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
                            .CompileScss(options)
                            .FingerprintUrls()
                            .AddResponseHeader("X-Content-Type-Options", "nosniff")
-                           .MinifyCss();
+                           .minifyCssWithOptions(options);
         }
 
         /// <summary>
@@ -78,7 +78,23 @@ namespace Microsoft.Extensions.DependencyInjection
                            .CompileScss(options)
                            .FingerprintUrls()
                            .AddResponseHeader("X-Content-Type-Options", "nosniff")
-                           .MinifyCss();
+                           .minifyCssWithOptions(options);
+        }
+
+        private static IEnumerable<IAsset> minifyCssWithOptions(this IEnumerable<IAsset> assets, WebOptimazerScssOptions options)
+        {
+            if (options?.MinifyCss ?? true)
+                return assets.MinifyCss();
+            else
+                return assets;
+        }
+
+        private static IAsset minifyCssWithOptions(this IAsset asset, WebOptimazerScssOptions options)
+        {
+            if (options?.MinifyCss ?? true)
+                return asset.MinifyCss();
+            else
+                return asset;
         }
     }
 }

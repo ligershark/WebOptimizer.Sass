@@ -92,5 +92,10 @@ namespace WebOptimizer.Sass
         /// Gets or sets a dynamic delegate used to resolve imports dynamically.
         /// </summary>
         public TryImportDelegate TryImport { get; set; }
+
+        /// <summary>
+        /// Gets or sets the option to minify the resulting css.
+        /// </summary>
+        public bool MinifyCss { get; set; } = true;
     }
 }
