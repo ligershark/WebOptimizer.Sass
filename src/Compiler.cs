@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
-using SharpScss;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
+using DartSassHost;
+using JavaScriptEngineSwitcher.ChakraCore;
 
 namespace WebOptimizer.Sass
 {
@@ -22,14 +23,14 @@ namespace WebOptimizer.Sass
     public class Compiler : IProcessor
     {
         private static Regex ImportRegex = new Regex("^@import ['\"]([^\"']+)['\"];$");
-        
+
         /// <summary>
         /// Gets the custom key that should be used when calculating the memory cache key.
         /// </summary>
         public string CacheKey(HttpContext context) => GenerateCacheKey(context);
 
         private WebOptimazerScssOptions options;
-        
+
         private IAsset _asset;
 
         private List<string> _addedImports;
@@ -43,10 +44,10 @@ namespace WebOptimizer.Sass
         {
             _addedImports = new List<string>();
             _asset = asset;
-             this.options = options;
+            this.options = options;
         }
 
-      
+
         /// <summary>
         /// Executes the processor on the specified configuration.
         /// </summary>
@@ -59,25 +60,34 @@ namespace WebOptimizer.Sass
             foreach (string route in context.Content.Keys)
             {
                 IFileInfo file = fileProvider.GetFileInfo(route);
-                var settings = new ScssOptions { InputFile = file.PhysicalPath };
-                if(options!=null)
+                var settings = new CompilationOptions { };
+                if (options != null)
                 {
-                    settings.IncludePaths.AddRange(options.IncludePaths);
-                    settings.GenerateSourceMap = options.GenerateSourceMap;
-                    settings.Indent = options.Indent;
-                    settings.IsIndentedSyntaxSource = options.IsIndentedSyntaxSource;
-                    settings.Linefeed = options.Linefeed;
+                    settings.OutputStyle = options.OutputStyle;
+                    settings.IncludePaths = settings.IncludePaths.Concat(options.IncludePaths).ToList();
+                    settings.SourceMap = options.GenerateSourceMap;
+                    settings.IndentType = options.Indent.Contains('\t') ? IndentType.Tab : IndentType.Space;
+                    settings.IndentWidth = options.Indent.Length;
+                    settings.LineFeedType = options.Linefeed switch { "\n" => LineFeedType.Lf, "\r" => LineFeedType.Cr, "\r\n" => LineFeedType.CrLf, "\n\r" => LineFeedType.LfCr, _ => throw new NotImplementedException() };
                     settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
-                    settings.SourceComments = options.SourceComments;
-                    settings.SourceMapContents = options.SourceMapContents;
-                    settings.SourceMapEmbed = options.SourceMapEmbed;
-                    settings.SourceMapRoot = options.SourceMapRoot;
-                    settings.TryImport = options.TryImport;
+                    //settings.SourceComments = options.SourceComments;
+                    settings.SourceMapIncludeContents = options.SourceMapContents;
+                    //settings.SourceMapEmbed = options.SourceMapEmbed;
+                    settings.SourceMapRootPath = options.SourceMapRoot;
+                    //settings.TryImport = options.TryImport;
                 }
 
-                ScssResult result = Scss.ConvertToCss(context.Content[route].AsString(), settings);
+                CompilationResult result;
+                if (file.Exists)
+                {
+                    result = new SassCompiler(new ChakraCoreJsEngineFactory()).CompileFile(file.PhysicalPath, options: settings);
+                }
+                else
+                {
+                    result = new SassCompiler(new ChakraCoreJsEngineFactory()).Compile(context.Content[route].AsString(), options?.IsIndentedSyntaxSource ?? false, options: settings);
+                }
 
-                content[route] = result.Css.AsByteArray();
+                content[route] = Encoding.UTF8.GetBytes(result.CompiledContent);
             }
 
             context.Content = content;
@@ -88,12 +98,12 @@ namespace WebOptimizer.Sass
         private string GenerateCacheKey(HttpContext context)
         {
             var cacheKey = new StringBuilder();
-            var env = (IWebHostEnvironment) context.RequestServices.GetService(typeof(IWebHostEnvironment));
+            var env = (IWebHostEnvironment)context.RequestServices.GetService(typeof(IWebHostEnvironment));
             IFileProvider fileProvider = _asset.GetFileProvider(env);
             if (_fileVersionProvider == null)
             {
-                var cache = (IMemoryCache) context.RequestServices.GetService(typeof(IMemoryCache));
-                
+                var cache = (IMemoryCache)context.RequestServices.GetService(typeof(IMemoryCache));
+
                 _fileVersionProvider = new FileVersionProvider(
                     fileProvider,
                     cache,
@@ -136,7 +146,7 @@ namespace WebOptimizer.Sass
             {
                 route = $"{route}.scss";
             }
-            
+
             var filePath = PathCombine(basePath, route);
             IFileInfo file = fileProvider.GetFileInfo(filePath);
 
@@ -156,7 +166,7 @@ namespace WebOptimizer.Sass
             {
                 return;
             }
-            
+
             // Add file in cache key
             _addedImports.Add(filePath);
             cacheKey.Append(_fileVersionProvider.AddFileVersionToPath(filePath));
