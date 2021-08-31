@@ -1,8 +1,7 @@
-﻿using SharpScss;
+using DartSassHost;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using static SharpScss.ScssOptions;
 
 namespace WebOptimizer.Sass
 {
@@ -14,7 +13,7 @@ namespace WebOptimizer.Sass
         public WebOptimazerScssOptions()
         {
             //Precision = 5;
-            OutputStyle = ScssOutputStyle.Nested;
+            OutputStyle = OutputStyle.Expanded;
             IncludePaths = new List<string>();
             Indent = "  ";
             Linefeed = "\n";
@@ -29,7 +28,7 @@ namespace WebOptimizer.Sass
         /// <summary>
         /// Gets or sets the output style. Default is <see cref="ScssOutputStyle.Nested"/>
         /// </summary>
-        public ScssOutputStyle OutputStyle { get; set; }
+        public OutputStyle OutputStyle { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to generate source map (result in <see cref="ScssResult.SourceMap"/>
@@ -91,7 +90,7 @@ namespace WebOptimizer.Sass
         /// <summary>
         /// Gets or sets a dynamic delegate used to resolve imports dynamically.
         /// </summary>
-        public TryImportDelegate TryImport { get; set; }
+        //public TryImportDelegate TryImport { get; set; }
 
         /// <summary>
         /// Gets or sets the option to minify the resulting css.
