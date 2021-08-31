@@ -46,7 +46,7 @@ namespace WebOptimizer.Sass.Test
 
             await processor.ExecuteAsync(context.Object);
             var result = context.Object.Content.First().Value;
-            Assert.Equal("div {\n  background: blue; }\n", result.AsString());
+            Assert.Equal("div {\n  background: blue;\n}", result.AsString());
         }
 
         [Fact]
