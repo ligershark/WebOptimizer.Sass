@@ -22,12 +22,12 @@
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore" Version="3.12.6" />
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-x64" Version="3.12.6" />
-		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-x86" Version="3.12.6"  />
+		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-x86" Version="3.12.6" />
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-arm" Version="3.12.6" />
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-arm64" Version="3.12.6" />
-		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.linux-x64" Version="3.12.6"  />
+		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.linux-x64" Version="3.12.6" />
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.osx-x64" Version="3.12.6" />
 		<PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.276" />
-		<PackageReference Include="DartSassHost" Version="1.0.0-preview4" />
+		<PackageReference Include="DartSassHost" Version="1.0.0-preview5" />
 	</ItemGroup>
 </Project>

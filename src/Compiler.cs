@@ -57,37 +57,41 @@ namespace WebOptimizer.Sass
             var env = (IWebHostEnvironment)context.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment));
             IFileProvider fileProvider = context.Asset.GetFileProvider(env);
 
-            foreach (string route in context.Content.Keys)
+            var settings = new CompilationOptions();
+            if (options != null)
             {
-                IFileInfo file = fileProvider.GetFileInfo(route);
-                var settings = new CompilationOptions { };
-                if (options != null)
-                {
-                    settings.OutputStyle = options.OutputStyle;
-                    settings.IncludePaths = settings.IncludePaths.Concat(options.IncludePaths).ToList();
-                    settings.SourceMap = options.GenerateSourceMap;
-                    settings.IndentType = options.Indent.Contains('\t') ? IndentType.Tab : IndentType.Space;
-                    settings.IndentWidth = options.Indent.Length;
-                    settings.LineFeedType = options.Linefeed switch { "\n" => LineFeedType.Lf, "\r" => LineFeedType.Cr, "\r\n" => LineFeedType.CrLf, "\n\r" => LineFeedType.LfCr, _ => throw new NotImplementedException() };
-                    settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
-                    //settings.SourceComments = options.SourceComments;
-                    settings.SourceMapIncludeContents = options.SourceMapContents;
-                    //settings.SourceMapEmbed = options.SourceMapEmbed;
-                    settings.SourceMapRootPath = options.SourceMapRoot;
-                    //settings.TryImport = options.TryImport;
-                }
+                settings.OutputStyle = options.OutputStyle;
+                settings.IncludePaths = settings.IncludePaths.Concat(options.IncludePaths).ToList();
+                settings.SourceMap = options.GenerateSourceMap;
+                settings.IndentType = options.Indent.Contains('\t') ? IndentType.Tab : IndentType.Space;
+                settings.IndentWidth = options.Indent.Length;
+                settings.LineFeedType = options.Linefeed switch { "\n" => LineFeedType.Lf, "\r" => LineFeedType.Cr, "\r\n" => LineFeedType.CrLf, "\n\r" => LineFeedType.LfCr, _ => throw new NotImplementedException() };
+                settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
+                //settings.SourceComments = options.SourceComments;
+                settings.SourceMapIncludeContents = options.SourceMapContents;
+                settings.InlineSourceMap = options.SourceMapEmbed;
+                settings.SourceMapRootPath = options.SourceMapRoot;
+                //settings.TryImport = options.TryImport;
+            }
 
-                CompilationResult result;
-                if (file.Exists)
+            using (var sassCompiler = new SassCompiler(new ChakraCoreJsEngineFactory(), settings))
+            {
+                foreach (string route in context.Content.Keys)
                 {
-                    result = new SassCompiler(new ChakraCoreJsEngineFactory()).CompileFile(file.PhysicalPath, options: settings);
-                }
-                else
-                {
-                    result = new SassCompiler(new ChakraCoreJsEngineFactory()).Compile(context.Content[route].AsString(), options?.IsIndentedSyntaxSource ?? false, options: settings);
-                }
+                    IFileInfo file = fileProvider.GetFileInfo(route);
+                    CompilationResult result;
 
-                content[route] = Encoding.UTF8.GetBytes(result.CompiledContent);
+                    if (file.Exists)
+                    {
+                        result = sassCompiler.CompileFile(file.PhysicalPath);
+                    }
+                    else
+                    {
+                        result = sassCompiler.Compile(context.Content[route].AsString(), options?.IsIndentedSyntaxSource ?? false);
+                    }
+
+                    content[route] = result.CompiledContent.AsByteArray();
+                }
             }
 
             context.Content = content;
