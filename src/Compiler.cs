@@ -136,7 +136,12 @@ namespace WebOptimizer.Sass
                     }
                 }
             }
-
+            
+            _addedImports.ForEach(filePath =>
+            {
+                cacheKey.Append(_fileVersionProvider.AddFileVersionToPath(filePath));
+            });
+            
             using var algo = SHA1.Create();
             byte[] buffer = Encoding.UTF8.GetBytes(cacheKey.ToString());
             byte[] hash = algo.ComputeHash(buffer);
@@ -173,8 +178,7 @@ namespace WebOptimizer.Sass
 
             // Add file in cache key
             _addedImports.Add(filePath);
-            cacheKey.Append(_fileVersionProvider.AddFileVersionToPath(filePath));
-
+            
             // Add sub files
             using var stream = file.CreateReadStream();
             using var reader = new StreamReader(stream);
