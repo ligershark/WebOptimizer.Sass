@@ -137,10 +137,9 @@ namespace WebOptimizer.Sass
                 }
             }
             
-            _addedImports.ForEach(filePath =>
-            {
-                cacheKey.Append(_fileVersionProvider.AddFileVersionToPath(filePath));
-            });
+            for (int i = 0; i < _addedImports.Count; i++) {
+                cacheKey.Append(_fileVersionProvider.AddFileVersionToPath(_addedImports[i]));
+            }
             
             using var algo = SHA1.Create();
             byte[] buffer = Encoding.UTF8.GetBytes(cacheKey.ToString());
