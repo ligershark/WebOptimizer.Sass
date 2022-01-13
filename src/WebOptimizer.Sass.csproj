@@ -27,7 +27,7 @@
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-arm64" Version="3.12.6" />
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.linux-x64" Version="3.12.6" />
 		<PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.osx-x64" Version="3.12.6" />
-		<PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.276" />
 		<PackageReference Include="DartSassHost" Version="1.0.0-preview5" />
+		<PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.348" />
 	</ItemGroup>
 </Project>
