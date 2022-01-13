@@ -52,13 +52,17 @@ namespace WebOptimizer.Sass.Test
         [Fact]
         public void CacheKey_Success()
         {
+            var context = new Mock<IAssetContext>().SetupAllProperties();
             var asset = new Mock<IAsset>();
             asset.Setup(a => a.SourceFiles)
-                .Returns(new List<string>()
+                .Returns(new HashSet<string>()
                 {
                     "css/test1.scss"
                 });
             var env = new Mock<IWebHostEnvironment>();
+            
+            context.SetupGet(s => s.Asset)
+                .Returns(asset.Object);
 
             // Setup files
             var fileProvider = new Mock<IFileProvider>();
@@ -130,7 +134,7 @@ namespace WebOptimizer.Sass.Test
             };
             
             var processor = new Compiler(asset.Object);
-            var cacheKey = processor.CacheKey(httpContext);
+            var cacheKey = processor.CacheKey(httpContext, context.Object);
             Assert.NotEmpty(cacheKey);
         }
     }

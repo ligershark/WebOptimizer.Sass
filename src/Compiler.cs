@@ -27,7 +27,7 @@ namespace WebOptimizer.Sass
         /// <summary>
         /// Gets the custom key that should be used when calculating the memory cache key.
         /// </summary>
-        public string CacheKey(HttpContext context) => GenerateCacheKey(context);
+        public string CacheKey(HttpContext context, IAssetContext config) => GenerateCacheKey(context, config);
 
         private WebOptimazerScssOptions options;
 
@@ -99,7 +99,7 @@ namespace WebOptimizer.Sass
             return Task.CompletedTask;
         }
 
-        private string GenerateCacheKey(HttpContext context)
+        private string GenerateCacheKey(HttpContext context, IAssetContext config)
         {
             var cacheKey = new StringBuilder();
             var env = (IWebHostEnvironment)context.RequestServices.GetService(typeof(IWebHostEnvironment));
@@ -114,7 +114,7 @@ namespace WebOptimizer.Sass
                     context.Request.PathBase);
             }
 
-            foreach (var route in _asset.SourceFiles.Where(f => f.EndsWith(".scss")))
+            foreach (var route in config.Asset.SourceFiles.Where(f => f.EndsWith(".scss")).Select(f => f.TrimStart('/')))
             {
                 IFileInfo file = fileProvider.GetFileInfo(route);
                 var basePath = GetBasePath(route);
@@ -161,7 +161,13 @@ namespace WebOptimizer.Sass
             // Add underscore at the start if missing
             if (!file.Exists)
             {
-                filePath = PathCombine(basePath, $"_{route}");
+                var pathParts = route.Split('/');
+
+                pathParts[pathParts.Length - 1] = $"_{pathParts[pathParts.Length - 1]}";
+
+                var finalRoute = string.Join("/", pathParts);
+                
+                filePath = PathCombine(basePath, finalRoute);
                 file = fileProvider.GetFileInfo(filePath);
                 if (!file.Exists)
                 {
