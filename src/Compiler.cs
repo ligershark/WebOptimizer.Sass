@@ -114,7 +114,13 @@ namespace WebOptimizer.Sass
                     context.Request.PathBase);
             }
 
-            foreach (var route in ((IEnumerable<string>)config.Asset.Items["PhysicalFiles"]).Select(f => f.TrimStart('/')))
+			IEnumerable<string> routes = config.Asset.SourceFiles.Where(f => f.EndsWith(".scss"));
+			if (config.Asset.Items?.ContainsKey("PhysicalFiles") ?? false)
+            {
+                routes = (IEnumerable<string>)config.Asset.Items["PhysicalFiles"];
+            }
+
+            foreach (var route in routes.Select(f => f.TrimStart('/')))
             {
                 IFileInfo file = fileProvider.GetFileInfo(route);
                 var basePath = GetBasePath(route);
