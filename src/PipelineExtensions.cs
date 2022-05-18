@@ -12,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Compile Sass or Scss files on the asset pipeline.
         /// </summary>
-        public static IAsset CompileScss(this IAsset asset, WebOptimazerScssOptions options = null)
+        public static IAsset CompileScss(this IAsset asset, WebOptimizerScssOptions options = null)
         {
             asset.Processors.Add(new Compiler(asset, options));
             return asset;
@@ -21,7 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// Compile Sass or Scss files on the asset pipeline.
         /// </summary>
-        public static IEnumerable<IAsset> CompileScss(this IEnumerable<IAsset> assets, WebOptimazerScssOptions options = null)
+        public static IEnumerable<IAsset> CompileScss(this IEnumerable<IAsset> assets, WebOptimizerScssOptions options = null)
         {
             var list = new List<IAsset>();
 
@@ -40,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="route">The route where the compiled .css file will be available from.</param>
         /// <param name="options"></param>
         /// <param name="sourceFiles">The path to the .sass or .scss source files to compile.</param>
-        public static IAsset AddScssBundle(this IAssetPipeline pipeline,WebOptimazerScssOptions options, string route, params string[] sourceFiles)
+        public static IAsset AddScssBundle(this IAssetPipeline pipeline,WebOptimizerScssOptions options, string route, params string[] sourceFiles)
         {
             return pipeline.AddBundle(route, "text/css; charset=UTF-8", sourceFiles)
                            .CompileScss(options)
@@ -58,7 +58,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// Compiles .scss files into CSS and makes them servable in the browser.
         /// </summary>
         /// <param name="pipeline">The asset pipeline.</param>
-        public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimazerScssOptions options = null)
+        public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimizerScssOptions options = null)
         {
             return pipeline.AddFiles("text/css; charset=UTF-8", "**/*.scss")
                            .CompileScss(options)
@@ -72,7 +72,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="pipeline">The pipeline object.</param>
         /// <param name="sourceFiles">A list of relative file names of the sources to compile.</param>
-        public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimazerScssOptions options = null, params string[] sourceFiles)
+        public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimizerScssOptions options = null, params string[] sourceFiles)
         {
             return pipeline.AddFiles("text/css; charset=UTF-8", sourceFiles)
                            .CompileScss(options)
@@ -81,7 +81,7 @@ namespace Microsoft.Extensions.DependencyInjection
                            .minifyCssWithOptions(options);
         }
 
-        private static IEnumerable<IAsset> minifyCssWithOptions(this IEnumerable<IAsset> assets, WebOptimazerScssOptions options)
+        private static IEnumerable<IAsset> minifyCssWithOptions(this IEnumerable<IAsset> assets, WebOptimizerScssOptions options)
         {
             if (options?.MinifyCss ?? true)
                 return assets.MinifyCss();
@@ -89,7 +89,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 return assets;
         }
 
-        private static IAsset minifyCssWithOptions(this IAsset asset, WebOptimazerScssOptions options)
+        private static IAsset minifyCssWithOptions(this IAsset asset, WebOptimizerScssOptions options)
         {
             if (options?.MinifyCss ?? true)
                 return asset.MinifyCss();

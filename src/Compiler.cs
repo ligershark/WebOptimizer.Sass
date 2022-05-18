@@ -29,7 +29,7 @@ namespace WebOptimizer.Sass
         /// </summary>
         public string CacheKey(HttpContext context, IAssetContext config) => GenerateCacheKey(context, config);
 
-        private WebOptimazerScssOptions options;
+        private WebOptimizerScssOptions options;
 
         private IAsset _asset;
 
@@ -40,7 +40,7 @@ namespace WebOptimizer.Sass
         /// <summary>
         /// Gets the custom key that should be used when calculating the memory cache key.
         /// </summary>
-        public Compiler(IAsset asset, WebOptimazerScssOptions options = null)
+        public Compiler(IAsset asset, WebOptimizerScssOptions options = null)
         {
             _addedImports = new List<string>();
             _asset = asset;
