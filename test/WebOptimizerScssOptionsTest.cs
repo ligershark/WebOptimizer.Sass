@@ -2,12 +2,12 @@ using Xunit;
 
 namespace WebOptimizer.Sass.Test
 {
-    public class WebOptimazerScssOptionsTest
+    public class WebOptimizerScssOptionsTest
     {
         [Fact]
         public void MinifyScssOptionIsTrueByDefault()
         {
-            var target = new WebOptimazerScssOptions();
+            var target = new WebOptimizerScssOptions();
 
             Assert.True(target.MinifyCss);
         }

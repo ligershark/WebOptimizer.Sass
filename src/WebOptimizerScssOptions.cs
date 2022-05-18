@@ -5,12 +5,12 @@ using System.Text;
 
 namespace WebOptimizer.Sass
 {
-    public class WebOptimazerScssOptions
+    public class WebOptimizerScssOptions
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ScssOptions"/> class.
         /// </summary>
-        public WebOptimazerScssOptions()
+        public WebOptimizerScssOptions()
         {
             //Precision = 5;
             OutputStyle = OutputStyle.Expanded;
