@@ -22,7 +22,7 @@ artifacts:
   - path: src\bin\release\*.nupkg
     name: NuGet package
 
-  - path: src\**\*.snupkg
+  - path: src\bin\release\*.snupkg
     name: Symbol package
 
 deploy:
