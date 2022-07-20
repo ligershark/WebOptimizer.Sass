@@ -1,35 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netcoreapp3.0</TargetFramework>
-		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\WebOptimizer.Sass.xml</DocumentationFile>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<PackageTags>sass, scss, bundle, minify, optimize, asp.net core</PackageTags>
-		<Version>3.0.0</Version>
-		<Authors>LigerShark</Authors>
-		<Company>LigerShark</Company>
-		<Description>Compiles Sass and Scss files for the LigerShark.WebOptimizer.Core system.</Description>
-		<Copyright>Copyright © LigerShark</Copyright>
-		<PackageId>LigerShark.WebOptimizer.Sass</PackageId>
-		<Product>LigerShark.WebOptimizer.Sass</Product>
-		<PackageIconUrl>https://raw.githubusercontent.com/ligershark/WebOptimizer/master/art/logo64x64.png</PackageIconUrl>
-		<PackageProjectUrl>https://github.com/ligershark/WebOptimizer.Sass</PackageProjectUrl>
-		<PackageLicenseUrl>https://github.com/ligershark/WebOptimizer.Sass/blob/master/LICENSE.txt</PackageLicenseUrl>
-		<RepositoryUrl>https://github.com/ligershark/WebOptimizer.Sass</RepositoryUrl>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\WebOptimizer.Sass.xml</DocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageTags>sass, scss, bundle, minify, optimize, asp.net core</PackageTags>
+    <Version>3.0.0</Version>
+    <Authors>LigerShark</Authors>
+    <Company>LigerShark</Company>
+    <Description>Compiles Sass and Scss files for the LigerShark.WebOptimizer.Core system.</Description>
+    <Copyright>Copyright © LigerShark</Copyright>
+    <PackageId>LigerShark.WebOptimizer.Sass</PackageId>
+    <Product>LigerShark.WebOptimizer.Sass</Product>
+    <PackageIconUrl>https://raw.githubusercontent.com/ligershark/WebOptimizer/master/art/logo64x64.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/ligershark/WebOptimizer.Sass</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/ligershark/WebOptimizer.Sass/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/ligershark/WebOptimizer.Sass</RepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-		<PackageReference Include="DartSassHost" Version="1.0.0-preview5" />
-		<PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.17.1" />
-		<PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.348" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.linux-arm" Version="7.2.1" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.linux-arm64" Version="7.2.1" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.linux-x64" Version="7.2.1" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.osx-arm64" Version="7.2.1" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.osx-x64" Version="7.2.1" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.win-arm64" Version="7.2.1" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.2.1" />
-		<PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.2.1" />
-	</ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="DartSassHost" Version="1.0.0-preview5" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.17.1" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.348" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.linux-arm" Version="7.2.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.linux-arm64" Version="7.2.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.linux-x64" Version="7.2.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-arm64" Version="7.2.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.osx-x64" Version="7.2.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-arm64" Version="7.2.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.2.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.2.1" />
+  </ItemGroup>
 </Project>
