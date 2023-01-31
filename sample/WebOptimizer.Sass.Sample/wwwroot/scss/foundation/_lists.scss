@@ -1,0 +1,10 @@
+﻿ul, ol {
+    text-align: left;
+
+    & & {
+        padding: {
+            bottom: 0;
+            left: 0;
+        }
+    }
+}

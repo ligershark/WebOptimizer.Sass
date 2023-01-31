@@ -1,7 +1,10 @@
-﻿using System;
+﻿using DartSassHost;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,10 +12,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Caching.Memory;
-using DartSassHost;
-using JavaScriptEngineSwitcher.V8;
 
 namespace WebOptimizer.Sass
 {
@@ -65,16 +64,20 @@ namespace WebOptimizer.Sass
                 settings.SourceMap = options.GenerateSourceMap;
                 settings.IndentType = options.Indent.Contains('\t') ? IndentType.Tab : IndentType.Space;
                 settings.IndentWidth = options.Indent.Length;
-                settings.LineFeedType = options.Linefeed switch { "\n" => LineFeedType.Lf, "\r" => LineFeedType.Cr, "\r\n" => LineFeedType.CrLf, "\n\r" => LineFeedType.LfCr, _ => throw new NotImplementedException() };
+                settings.LineFeedType = options.Linefeed switch {
+                    "\n" => LineFeedType.Lf,
+                    "\r" => LineFeedType.Cr,
+                    "\r\n" => LineFeedType.CrLf,
+                    "\n\r" => LineFeedType.LfCr,
+                    _ => throw new NotImplementedException()
+                };
                 settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
-                //settings.SourceComments = options.SourceComments;
                 settings.SourceMapIncludeContents = options.SourceMapContents;
                 settings.InlineSourceMap = options.SourceMapEmbed;
                 settings.SourceMapRootPath = options.SourceMapRoot;
-                //settings.TryImport = options.TryImport;
             }
 
-            using (var sassCompiler = new SassCompiler(new V8JsEngineFactory(), settings))
+            using (var sassCompiler = new SassCompiler(settings))
             {
                 foreach (string route in context.Content.Keys)
                 {
@@ -114,8 +117,8 @@ namespace WebOptimizer.Sass
                     context.Request.PathBase);
             }
 
-			IEnumerable<string> routes = config.Asset.SourceFiles.Where(f => f.EndsWith(".scss"));
-			if (config.Asset.Items?.ContainsKey("PhysicalFiles") ?? false)
+            IEnumerable<string> routes = config.Asset.SourceFiles.Where(f => f.EndsWith(".scss"));
+            if (config.Asset.Items?.ContainsKey("PhysicalFiles") ?? false)
             {
                 routes = (IEnumerable<string>)config.Asset.Items["PhysicalFiles"];
             }
@@ -142,11 +145,11 @@ namespace WebOptimizer.Sass
                     }
                 }
             }
-            
+
             for (int i = 0; i < _addedImports.Count; i++) {
                 cacheKey.Append(_fileVersionProvider.AddFileVersionToPath(_addedImports[i]));
             }
-            
+
             using var algo = SHA1.Create();
             byte[] buffer = Encoding.UTF8.GetBytes(cacheKey.ToString());
             byte[] hash = algo.ComputeHash(buffer);
@@ -172,7 +175,7 @@ namespace WebOptimizer.Sass
                 pathParts[pathParts.Length - 1] = $"_{pathParts[pathParts.Length - 1]}";
 
                 var finalRoute = string.Join("/", pathParts);
-                
+
                 filePath = PathCombine(basePath, finalRoute);
                 file = fileProvider.GetFileInfo(filePath);
                 if (!file.Exists)
@@ -189,7 +192,7 @@ namespace WebOptimizer.Sass
 
             // Add file in cache key
             _addedImports.Add(filePath);
-            
+
             // Add sub files
             using var stream = file.CreateReadStream();
             using var reader = new StreamReader(stream);

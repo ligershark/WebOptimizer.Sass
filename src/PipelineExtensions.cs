@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using JavaScriptEngineSwitcher.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using WebOptimizer;
 using WebOptimizer.Sass;
 
@@ -14,6 +17,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         public static IAsset CompileScss(this IAsset asset, WebOptimizerScssOptions options = null)
         {
+            CheckJsEngineRegistration();
+
             asset.Processors.Add(new Compiler(asset, options));
             return asset;
         }
@@ -23,6 +28,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         public static IEnumerable<IAsset> CompileScss(this IEnumerable<IAsset> assets, WebOptimizerScssOptions options = null)
         {
+            CheckJsEngineRegistration();
+
             var list = new List<IAsset>();
 
             foreach (IAsset asset in assets)
@@ -42,6 +49,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="sourceFiles">The path to the .sass or .scss source files to compile.</param>
         public static IAsset AddScssBundle(this IAssetPipeline pipeline,WebOptimizerScssOptions options, string route, params string[] sourceFiles)
         {
+            CheckJsEngineRegistration();
+
             return pipeline.AddBundle(route, "text/css; charset=UTF-8", sourceFiles)
                            .CompileScss(options)
                            .AdjustRelativePaths()
@@ -60,6 +69,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="pipeline">The asset pipeline.</param>
         public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimizerScssOptions options = null)
         {
+            CheckJsEngineRegistration();
+
             return pipeline.AddFiles("text/css; charset=UTF-8", "**/*.scss")
                            .CompileScss(options)
                            .FingerprintUrls()
@@ -74,6 +85,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="sourceFiles">A list of relative file names of the sources to compile.</param>
         public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimizerScssOptions options = null, params string[] sourceFiles)
         {
+            CheckJsEngineRegistration();
+
             return pipeline.AddFiles("text/css; charset=UTF-8", sourceFiles)
                            .CompileScss(options)
                            .FingerprintUrls()
@@ -95,6 +108,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 return asset.MinifyCss();
             else
                 return asset;
+        }
+
+        private static void CheckJsEngineRegistration()
+        {
+            IJsEngineSwitcher engineSwitcher = JsEngineSwitcher.Current;
+            if (engineSwitcher == null
+                || !engineSwitcher.EngineFactories.Any(e => e.EngineName == engineSwitcher.DefaultEngineName))
+            {
+                throw new InvalidOperationException("JS engine is not registered.");
+            }
         }
     }
 }

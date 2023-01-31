@@ -10,6 +10,18 @@ Add the NuGet package [LigerShark.WebOptimizer.Sass](https://nuget.org/packages/
 
 > &gt; dotnet add package LigerShark.WebOptimizer.Sass
 
+Since the [original library](https://www.npmjs.com/package/sass) is written in JavaScript, you will need a JS engine to run it.
+As a JS engine is used the [JavaScript Engine Switcher](https://github.com/Taritsyn/JavaScriptEngineSwitcher) library.
+First of all, you need to install the [JavaScriptEngineSwitcher.Extensions.MsDependencyInjection](https://www.nuget.org/packages/JavaScriptEngineSwitcher.Extensions.MsDependencyInjection) package which makes registration of JS engines more convenient.
+Then you need to install one of the NuGet packages containing a JS engine provider:
+
+ * [JavaScriptEngineSwitcher.ChakraCore](https://nuget.org/packages/JavaScriptEngineSwitcher.ChakraCore)
+ * [JavaScriptEngineSwitcher.Jint](https://www.nuget.org/packages/JavaScriptEngineSwitcher.Jint) (prerelease versions only)
+ * [JavaScriptEngineSwitcher.Msie](https://nuget.org/packages/JavaScriptEngineSwitcher.Msie) (only in the Chakra “Edge” JsRT mode)
+ * [JavaScriptEngineSwitcher.V8](https://nuget.org/packages/JavaScriptEngineSwitcher.V8)
+
+After installing the packages, you will need to [register the default JS engine](https://github.com/Taritsyn/JavaScriptEngineSwitcher/wiki/Registration-of-JS-engines#aspnet-core).
+
 ## Versions
 Master is being updated for ```ASP.NET Core 3.0```
 For ```ASP.NET Core 2.x```, use the **[2.0 branch.](https://github.com/ligershark/WebOptimizer.Sass/tree/2.0)**
@@ -23,6 +35,12 @@ In **Startup.cs**, modify the *ConfigureServices* method:
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddMvc();
+
+    // Add JavaScriptEngineSwitcher services to the services container.
+    services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+        .AddV8()
+        ;
+
     services.AddWebOptimizer(pipeline =>
     {
         pipeline.AddScssBundle("/all.css", "a.scss", "b.scss");

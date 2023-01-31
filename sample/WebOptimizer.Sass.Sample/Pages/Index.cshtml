@@ -1,0 +1,19 @@
+﻿@page
+@{
+    ViewData["Title"] = "Compilation";
+}
+
+@section head {
+    <link rel="stylesheet" href="~/scss/a.scss" asp-append-version="true" />
+}
+
+<div>
+    <p>This page references the Sass stylesheet <a href="~/scss/a.scss">/scss/a.scss</a> which result in:</p>
+
+    <ul>
+        <li>Sass document being compiled to CSS</li>
+        <li>Response is minified</li>
+        <li>Image url is being fingerprinted</li>
+        <li>Cached on both server- and client-side</li>
+    </ul>
+</div>
