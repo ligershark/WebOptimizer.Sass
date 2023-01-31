@@ -1,22 +1,35 @@
-using System;
+using JavaScriptEngineSwitcher.Core;
+using JavaScriptEngineSwitcher.Jint;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.FileProviders.Physical;
+using Microsoft.Extensions.Primitives;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 using Xunit;
 
 namespace WebOptimizer.Sass.Test
 {
     public class CompilerTest
     {
+        static CompilerTest()
+        {
+            IJsEngineSwitcher engineSwitcher = JsEngineSwitcher.Current;
+            engineSwitcher.EngineFactories
+                .AddJint()
+                ;
+
+            engineSwitcher.DefaultEngineName = JintJsEngine.EngineName;
+        }
+
+
         [Fact]
         public async Task Compile_Success()
         {
@@ -32,7 +45,7 @@ namespace WebOptimizer.Sass.Test
 
             context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)))
                    .Returns(env.Object);
-            
+
             var inputFile = new PhysicalFileInfo(new FileInfo("site.css"));
 
             context.SetupGet(s => s.Asset)
@@ -60,7 +73,7 @@ namespace WebOptimizer.Sass.Test
                     "css/test1.scss"
                 });
             var env = new Mock<IWebHostEnvironment>();
-            
+
             context.SetupGet(s => s.Asset)
                 .Returns(asset.Object);
 
@@ -74,14 +87,14 @@ namespace WebOptimizer.Sass.Test
             test1.SetupSequence(f => f.CreateReadStream())
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test2'; \r\n @import \"test3\";")))
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'test2'; \r\n @import \"test3\";")));
-                
+
             var test2 = new Mock<IFileInfo>();
             test2.Setup(f => f.Exists).Returns(true);
             test2.Setup(f => f.PhysicalPath).Returns("css/test2.scss");
             test2.SetupSequence(f => f.CreateReadStream())
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import '../test4';")))
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import '../test4';")));
-                
+
             var test3 = new Mock<IFileInfo>();
             test3.Setup(f => f.Exists).Returns(true);
             test3.Setup(f => f.PhysicalPath).Returns("css/test3.scss");
@@ -107,7 +120,7 @@ namespace WebOptimizer.Sass.Test
                 .Returns(test3.Object);
             fileProvider.Setup(p => p.GetFileInfo("test4.scss"))
                 .Returns(test4.Object);
-            
+
             // Setup Cache
             var cache = new Mock<IMemoryCache>();
             object test;
@@ -118,21 +131,21 @@ namespace WebOptimizer.Sass.Test
                 .Returns(new List<IChangeToken>());
             cache.Setup(c => c.CreateEntry(It.IsAny<object>()))
                  .Returns(cacheEntry.Object);
-            
+
             // Setup Service provider
             var serviceProvider = new Mock<IServiceProvider>();
             serviceProvider.Setup(p => p.GetService(typeof(IWebHostEnvironment)))
                 .Returns(env.Object);
             serviceProvider.Setup(p => p.GetService(typeof(IMemoryCache)))
                 .Returns(cache.Object);
-            
+
             // Setup HttpContext
             var httpContext = new DefaultHttpContext()
             {
                 RequestServices = serviceProvider.Object,
                 Request = { PathBase = "/wwwroot" }
             };
-            
+
             var processor = new Compiler(asset.Object);
             var cacheKey = processor.CacheKey(httpContext, context.Object);
             Assert.NotEmpty(cacheKey);
