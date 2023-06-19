@@ -1,4 +1,4 @@
-﻿using DartSassHost;
+using DartSassHost;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
@@ -21,7 +21,7 @@ namespace WebOptimizer.Sass
     /// <seealso cref="WebOptimizer.IProcessor" />
     public class Compiler : IProcessor
     {
-        private static Regex ImportRegex = new Regex("^@import ['\"]([^\"']+)['\"];$");
+        private static Regex ImportRegex = new Regex("^@(?:import|use) ['\"]([^\"']+)['\"];$");
 
         /// <summary>
         /// Gets the custom key that should be used when calculating the memory cache key.

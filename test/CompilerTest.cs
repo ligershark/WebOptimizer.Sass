@@ -99,8 +99,8 @@ namespace WebOptimizer.Sass.Test
             test3.Setup(f => f.Exists).Returns(true);
             test3.Setup(f => f.PhysicalPath).Returns("css/test3.scss");
             test3.SetupSequence(f => f.CreateReadStream())
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/'); \r\n")))
-                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import url('http://localhost/'); \r\n")));
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/'; \r\n @use 'test5';")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/'; \r\n @use 'test5';")));
 
             var test4 = new Mock<IFileInfo>();
             test4.Setup(f => f.Exists).Returns(true);
@@ -108,6 +108,20 @@ namespace WebOptimizer.Sass.Test
             test4.SetupSequence(f => f.CreateReadStream())
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/';")))
                 .Returns(new MemoryStream(Encoding.Default.GetBytes("@import 'http://localhost/';")));
+
+            var test5 = new Mock<IFileInfo>();
+            test5.Setup(f => f.Exists).Returns(true);
+            test5.Setup(f => f.PhysicalPath).Returns("css/test5.scss");
+            test5.SetupSequence(f => f.CreateReadStream())
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@use '../test6';")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@use '../test6';")));
+
+            var test6 = new Mock<IFileInfo>();
+            test6.Setup(f => f.Exists).Returns(true);
+            test6.Setup(f => f.PhysicalPath).Returns("test6.scss");
+            test6.SetupSequence(f => f.CreateReadStream())
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@use 'http://localhost/';")))
+                .Returns(new MemoryStream(Encoding.Default.GetBytes("@use 'http://localhost/';")));
 
             var changeToken = new Mock<IChangeToken>();
             fileProvider.Setup(p => p.Watch(It.IsAny<string>()))
@@ -120,6 +134,10 @@ namespace WebOptimizer.Sass.Test
                 .Returns(test3.Object);
             fileProvider.Setup(p => p.GetFileInfo("test4.scss"))
                 .Returns(test4.Object);
+            fileProvider.Setup(p => p.GetFileInfo("css/test5.scss"))
+                .Returns(test5.Object);
+            fileProvider.Setup(p => p.GetFileInfo("test6.scss"))
+                .Returns(test6.Object);
 
             // Setup Cache
             var cache = new Mock<IMemoryCache>();
