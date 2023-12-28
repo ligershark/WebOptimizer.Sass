@@ -77,11 +77,11 @@ namespace WebOptimizer.Sass
                 settings.SourceMapRootPath = options.SourceMapRoot;
             }
 
-			IFileManager fileManager = FileManager.Instance;
-			if (fileProvider is ManifestEmbeddedFileProvider)
-			{
-				fileManager = new ManifestFileManager(fileProvider);
-			}
+            IFileManager fileManager = FileManager.Instance;
+            if (fileProvider is ManifestEmbeddedFileProvider)
+            {
+                fileManager = new ManifestFileManager(fileProvider);
+            }
 
             using (var sassCompiler = new SassCompiler(fileManager, settings))
             {
