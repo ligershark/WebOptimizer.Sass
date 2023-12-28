@@ -86,7 +86,7 @@ namespace WebOptimizer.Sass
 
                     if (file.Exists)
                     {
-                        result = sassCompiler.CompileFile(file.PhysicalPath);
+                        result = sassCompiler.CompileFile(file.PhysicalPath ?? route);
                     }
                     else
                     {
