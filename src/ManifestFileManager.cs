@@ -24,15 +24,10 @@ namespace WebOptimizer.Sass
             return file.Exists;
         }
 
-        public string GetCurrentDirectory()
-        {
-            return "";
-        }
+        public string GetCurrentDirectory() => string.Empty;
 
-        public bool IsAppRelativeVirtualPath(string path)
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsAppRelativeVirtualPath(string path) => throw new NotImplementedException();
+
 
         public string ReadFile(string path)
         {
@@ -44,17 +39,12 @@ namespace WebOptimizer.Sass
                 );
             }
 
-            path = path.TrimStart('/');
-            path = path.TrimStart('\\');
             IFileInfo file = _fileProvider.GetFileInfo(path);
             using Stream stream = file.CreateReadStream();
             using StreamReader reader = new StreamReader(stream, Encoding.UTF8);
             return reader.ReadToEnd();
         }
 
-        public string ToAbsoluteVirtualPath(string path)
-        {
-            throw new NotImplementedException();
-        }
+        public string ToAbsoluteVirtualPath(string path) => throw new NotImplementedException();
     }
 }
