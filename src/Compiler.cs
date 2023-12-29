@@ -77,7 +77,13 @@ namespace WebOptimizer.Sass
                 settings.SourceMapRootPath = options.SourceMapRoot;
             }
 
-            using (var sassCompiler = new SassCompiler(settings))
+            IFileManager fileManager = FileManager.Instance;
+            if (fileProvider is ManifestEmbeddedFileProvider)
+            {
+                fileManager = new ManifestFileManager(fileProvider);
+            }
+
+            using (var sassCompiler = new SassCompiler(fileManager, settings))
             {
                 foreach (string route in context.Content.Keys)
                 {
@@ -86,7 +92,7 @@ namespace WebOptimizer.Sass
 
                     if (file.Exists)
                     {
-                        result = sassCompiler.CompileFile(file.PhysicalPath);
+                        result = sassCompiler.CompileFile(file.PhysicalPath ?? route);
                     }
                     else
                     {
