@@ -13,9 +13,11 @@
     <Copyright>Copyright © LigerShark</Copyright>
     <PackageId>LigerShark.WebOptimizer.Sass</PackageId>
     <Product>LigerShark.WebOptimizer.Sass</Product>
+    <PackageIcon>logo.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/ligershark/WebOptimizer/master/art/logo64x64.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/ligershark/WebOptimizer.Sass</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/ligershark/WebOptimizer.Sass/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ligershark/WebOptimizer.Sass</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -26,4 +28,10 @@
     <PackageReference Include="DartSassHost" Version="1.0.1" />
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.372" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+    <None Include="../art/logo64x64.png" Pack="true" Visible="false" PackagePath="logo.png"/>
+  </ItemGroup>
+
 </Project>
