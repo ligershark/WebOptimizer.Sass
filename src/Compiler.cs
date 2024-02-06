@@ -1,4 +1,5 @@
 using DartSassHost;
+using JavaScriptEngineSwitcher.Core;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
@@ -53,7 +54,10 @@ namespace WebOptimizer.Sass
         public Task ExecuteAsync(IAssetContext context)
         {
             var content = new Dictionary<string, byte[]>();
-            var env = (IWebHostEnvironment)context.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment));
+            var serviceProvider = context.HttpContext.RequestServices;
+            var env = (IWebHostEnvironment)serviceProvider.GetService(typeof(IWebHostEnvironment));
+            var engineSwitcher = (IJsEngineSwitcher)serviceProvider.GetService(typeof(IJsEngineSwitcher));
+
             IFileProvider fileProvider = context.Asset.GetFileProvider(env);
 
             var settings = new CompilationOptions();
@@ -83,7 +87,7 @@ namespace WebOptimizer.Sass
                 fileManager = new ManifestFileManager(fileProvider);
             }
 
-            using (var sassCompiler = new SassCompiler(fileManager, settings))
+            using (var sassCompiler = new SassCompiler(engineSwitcher.CreateDefaultEngine, fileManager, settings))
             {
                 foreach (string route in context.Content.Keys)
                 {
