@@ -16,7 +16,7 @@ First of all, you need to install the [JavaScriptEngineSwitcher.Extensions.MsDep
 Then you need to install one of the NuGet packages containing a JS engine provider:
 
  * [JavaScriptEngineSwitcher.ChakraCore](https://nuget.org/packages/JavaScriptEngineSwitcher.ChakraCore)
- * [JavaScriptEngineSwitcher.Jint](https://www.nuget.org/packages/JavaScriptEngineSwitcher.Jint) (prerelease versions only)
+ * [JavaScriptEngineSwitcher.Jint](https://www.nuget.org/packages/JavaScriptEngineSwitcher.Jint)
  * [JavaScriptEngineSwitcher.Msie](https://nuget.org/packages/JavaScriptEngineSwitcher.Msie) (only in the Chakra “Edge” JsRT mode)
  * [JavaScriptEngineSwitcher.V8](https://nuget.org/packages/JavaScriptEngineSwitcher.V8)
 
@@ -37,7 +37,11 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc();
 
     // Add JavaScriptEngineSwitcher services to the services container.
-    services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+    services.AddJsEngineSwitcher(options =>
+    {
+        options.AllowCurrentProperty = false;
+        options.DefaultEngineName = V8JsEngine.EngineName;
+    })
         .AddV8()
         ;
 

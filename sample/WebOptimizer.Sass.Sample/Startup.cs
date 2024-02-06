@@ -1,4 +1,3 @@
-using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +15,11 @@ namespace WebOptimizer.Sass.Sample
             services.AddRazorPages();
 
             // Add JavaScriptEngineSwitcher services to the services container.
-            services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+            services.AddJsEngineSwitcher(options =>
+            {
+                options.AllowCurrentProperty = false;
+                options.DefaultEngineName = V8JsEngine.EngineName;
+            })
                 .AddV8()
                 ;
 

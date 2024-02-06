@@ -46,6 +46,9 @@ namespace WebOptimizer.Sass.Test
             context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IWebHostEnvironment)))
                    .Returns(env.Object);
 
+            context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IJsEngineSwitcher)))
+                   .Returns(JsEngineSwitcher.Current);
+
             var inputFile = new PhysicalFileInfo(new FileInfo("site.css"));
 
             context.SetupGet(s => s.Asset)

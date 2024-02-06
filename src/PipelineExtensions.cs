@@ -112,6 +112,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void CheckJsEngineRegistration()
         {
+            if (!JsEngineSwitcher.AllowCurrentProperty)
+            {
+                return;
+            }
+
             IJsEngineSwitcher engineSwitcher = JsEngineSwitcher.Current;
             if (engineSwitcher == null
                 || !engineSwitcher.EngineFactories.Any(e => e.EngineName == engineSwitcher.DefaultEngineName))
