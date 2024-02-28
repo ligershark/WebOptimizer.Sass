@@ -216,7 +216,7 @@ namespace WebOptimizer.Sass
                         var subRoute = match.Groups[i].Value;
                         if (!string.IsNullOrEmpty(subRoute) && !Uri.TryCreate(subRoute, UriKind.Absolute, out _))
                         {
-                            AppendImportedSassFiles(fileProvider, cacheKey, basePath, subRoute);
+                            AppendImportedSassFiles(fileProvider, cacheKey, GetBasePath(filePath), subRoute);
                         }
                     }
                 }
