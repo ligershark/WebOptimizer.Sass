@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WebOptimizer.Utils;
 
 namespace WebOptimizer.Sass
 {
@@ -73,7 +74,7 @@ namespace WebOptimizer.Sass
                     "\r" => LineFeedType.Cr,
                     "\r\n" => LineFeedType.CrLf,
                     "\n\r" => LineFeedType.LfCr,
-                    _ => throw new NotImplementedException()
+                    _ => throw new NotSupportedException()
                 };
                 settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
                 settings.SourceMapIncludeContents = options.SourceMapContents;
@@ -81,28 +82,13 @@ namespace WebOptimizer.Sass
                 settings.SourceMapRootPath = options.SourceMapRoot;
             }
 
-            IFileManager fileManager = FileManager.Instance;
-            if (fileProvider is ManifestEmbeddedFileProvider)
-            {
-                fileManager = new ManifestFileManager(fileProvider);
-            }
+            IFileManager fileManager = new FileProviderFileManager(fileProvider);
 
-            using (var sassCompiler = new SassCompiler(engineSwitcher.CreateDefaultEngine, fileManager, settings))
+            using (var sassCompiler = new SassCompiler(engineSwitcher.CreateDefaultEngine, fileManager))
             {
                 foreach (string route in context.Content.Keys)
                 {
-                    IFileInfo file = fileProvider.GetFileInfo(route);
-                    CompilationResult result;
-
-                    if (file.Exists)
-                    {
-                        result = sassCompiler.CompileFile(file.PhysicalPath ?? route);
-                    }
-                    else
-                    {
-                        result = sassCompiler.Compile(context.Content[route].AsString(), options?.IsIndentedSyntaxSource ?? false);
-                    }
-
+                    var result = sassCompiler.Compile(context.Content[route].AsString(), UrlPathUtils.MakeAbsolute("/", route), null, null, settings);
                     content[route] = result.CompiledContent.AsByteArray();
                 }
             }
@@ -133,10 +119,10 @@ namespace WebOptimizer.Sass
                 routes = (IEnumerable<string>)config.Asset.Items["PhysicalFiles"];
             }
 
-            foreach (var route in routes.Select(f => f.TrimStart('/')))
+            foreach (var route in routes.Select(x => UrlPathUtils.MakeAbsolute("/", x)))
             {
                 IFileInfo file = fileProvider.GetFileInfo(route);
-                var basePath = GetBasePath(route);
+                var basePath = UrlPathUtils.GetDirectory(route);
                 using var stream = file.CreateReadStream();
                 using var reader = new StreamReader(stream);
                 for (var line = reader.ReadLine(); line != null; line = reader.ReadLine())
@@ -174,7 +160,7 @@ namespace WebOptimizer.Sass
                 route = $"{route}.scss";
             }
 
-            var filePath = PathCombine(basePath, route);
+            var filePath = UrlPathUtils.MakeAbsolute(basePath, route);
             IFileInfo file = fileProvider.GetFileInfo(filePath);
 
             // Add underscore at the start if missing
@@ -186,7 +172,7 @@ namespace WebOptimizer.Sass
 
                 var finalRoute = string.Join("/", pathParts);
 
-                filePath = PathCombine(basePath, finalRoute);
+                filePath = UrlPathUtils.MakeAbsolute(basePath, finalRoute);
                 file = fileProvider.GetFileInfo(filePath);
                 if (!file.Exists)
                 {
@@ -216,23 +202,11 @@ namespace WebOptimizer.Sass
                         var subRoute = match.Groups[i].Value;
                         if (!string.IsNullOrEmpty(subRoute) && !Uri.TryCreate(subRoute, UriKind.Absolute, out _))
                         {
-                            AppendImportedSassFiles(fileProvider, cacheKey, GetBasePath(filePath), subRoute);
+                            AppendImportedSassFiles(fileProvider, cacheKey, UrlPathUtils.GetDirectory(filePath), subRoute);
                         }
                     }
                 }
             }
-        }
-
-        private static string PathCombine(params string[] args)
-        {
-            return Path.GetFullPath(Path.Combine(args))
-                .Replace($"{Environment.CurrentDirectory}{Path.DirectorySeparatorChar}", string.Empty)
-                .Replace("\\", "/");
-        }
-
-        private static string GetBasePath(string path)
-        {
-            return Path.GetDirectoryName(path)?.Replace("\\", "/") ?? string.Empty;
         }
     }
 }
