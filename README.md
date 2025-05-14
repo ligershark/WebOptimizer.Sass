@@ -95,7 +95,8 @@ services.AddWebOptimizer(pipeline =>
 
 ## Setup TagHelpers
 In `_ViewImports.cshtml` register the TagHelpers by adding `@addTagHelper *, WebOptimizer.Core` to the file. It may look something like this:
-
+> [!NOTE]
+> The TagHelpers are required in order for cache-busting version strings to be appended to the url. The ASP.NET LinkTagHelper attribute `asp-append-version="true"` is ignored.
 ```text
 @addTagHelper *, WebOptimizer.Core
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
