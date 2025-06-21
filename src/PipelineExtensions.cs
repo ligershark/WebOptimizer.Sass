@@ -1,7 +1,8 @@
 ﻿using JavaScriptEngineSwitcher.Core;
-using Microsoft.Extensions.DependencyInjection;
+using WebOptimizer;
+using WebOptimizer.Sass;
 
-namespace WebOptimizer.Sass;
+namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
 /// Extensions methods for registrating the Sass compiler on the Asset Pipeline.
