@@ -90,10 +90,10 @@ namespace WebOptimizer.Sass.Test
             var context = new Mock<IAssetContext>().SetupAllProperties();
             var asset = new Mock<IAsset>();
             asset.Setup(a => a.SourceFiles)
-                .Returns(new HashSet<string>()
-                {
+                .Returns(
+                [
                     "css/test1.scss"
-                });
+                ]);
             var env = new Mock<IWebHostEnvironment>();
 
             context.SetupGet(s => s.Asset)
@@ -137,7 +137,7 @@ namespace WebOptimizer.Sass.Test
                  .Returns(false);
             var cacheEntry = new Mock<ICacheEntry>().SetupAllProperties();
             cacheEntry.Setup(e => e.ExpirationTokens)
-                .Returns(new List<IChangeToken>());
+                .Returns([]);
             cache.Setup(c => c.CreateEntry(It.IsAny<object>()))
                  .Returns(cacheEntry.Object);
 

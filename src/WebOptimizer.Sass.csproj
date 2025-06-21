@@ -1,39 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\WebOptimizer.Sass.xml</DocumentationFile>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <PackageTags>sass, scss, bundle, minify, optimize, asp.net core</PackageTags>
-    <Version>3.0.0</Version>
     <Authors>LigerShark</Authors>
     <Company>LigerShark</Company>
-    <Description>Compiles Sass and Scss files for the LigerShark.WebOptimizer.Core system.</Description>
     <Copyright>Copyright © LigerShark</Copyright>
-    <PackageId>LigerShark.WebOptimizer.Sass</PackageId>
-    <Product>LigerShark.WebOptimizer.Sass</Product>
+    <Description>Compiles Sass and Scss files for the LigerShark.WebOptimizer.Core system.</Description>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\WebOptimizer.Sass.xml</DocumentationFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IncludeSymbols>true</IncludeSymbols>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
     <PackageIcon>logo.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/ligershark/WebOptimizer/master/art/logo64x64.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/ligershark/WebOptimizer.Sass</PackageProjectUrl>
+    <PackageId>LigerShark.WebOptimizer.Sass</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ligershark/WebOptimizer.Sass</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>sass, scss, bundle, minify, optimize, asp.net core</PackageTags>
+    <Product>LigerShark.WebOptimizer.Sass</Product>
     <RepositoryUrl>https://github.com/ligershark/WebOptimizer.Sass</RepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <LangVersion>latest</LangVersion>
+    <TargetFrameworks>net9.0</TargetFrameworks>
+    <Version>3.0.0</Version>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
-
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="DartSassHost" Version="1.0.13" />
-    <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.24.1" />
-    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.426" />
+    <PackageReference Include="DartSassHost" />
+    <PackageReference Include="JavaScriptEngineSwitcher.Core" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="../README.md" Pack="true" PackagePath="" />
     <None Include="../art/logo64x64.png" Pack="true" Visible="false" PackagePath="logo.png" />
   </ItemGroup>
-
 </Project>
