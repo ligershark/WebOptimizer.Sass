@@ -1,11 +1,7 @@
 ﻿using JavaScriptEngineSwitcher.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using WebOptimizer;
-using WebOptimizer.Sass;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace WebOptimizer.Sass;
 
 /// <summary>
 /// Extensions methods for registrating the Sass compiler on the Asset Pipeline.
@@ -15,39 +11,11 @@ public static class PipelineExtensions
     /// <summary>
     /// Compile Sass or Scss files on the asset pipeline.
     /// </summary>
-    public static IAsset CompileScss(this IAsset asset, WebOptimizerScssOptions options = null)
-    {
-        CheckJsEngineRegistration();
-
-        asset.Processors.Add(new Compiler(asset, options));
-        return asset;
-    }
-
-    /// <summary>
-    /// Compile Sass or Scss files on the asset pipeline.
-    /// </summary>
-    public static IEnumerable<IAsset> CompileScss(this IEnumerable<IAsset> assets, WebOptimizerScssOptions options = null)
-    {
-        CheckJsEngineRegistration();
-
-        var list = new List<IAsset>();
-
-        foreach (IAsset asset in assets)
-        {
-            list.Add(asset.CompileScss(options));
-        }
-
-        return list;
-    }
-
-    /// <summary>
-    /// Compile Sass or Scss files on the asset pipeline.
-    /// </summary>
     /// <param name="pipeline">The asset pipeline.</param>
     /// <param name="route">The route where the compiled .css file will be available from.</param>
     /// <param name="options"></param>
     /// <param name="sourceFiles">The path to the .sass or .scss source files to compile.</param>
-    public static IAsset AddScssBundle(this IAssetPipeline pipeline,WebOptimizerScssOptions options, string route, params string[] sourceFiles)
+    public static IAsset AddScssBundle(this IAssetPipeline pipeline, WebOptimizerScssOptions? options, string? route, params string[] sourceFiles)
     {
         CheckJsEngineRegistration();
 
@@ -57,7 +25,7 @@ public static class PipelineExtensions
                        .Concatenate()
                        .FingerprintUrls()
                        .AddResponseHeader("X-Content-Type-Options", "nosniff")
-                       .minifyCssWithOptions(options);
+                       .MinifyCssWithOptions(options);
     }
 
     /// <summary>
@@ -68,12 +36,43 @@ public static class PipelineExtensions
     /// <param name="sourceFiles">The source files.</param>
     /// <returns>IAsset.</returns>
     public static IAsset AddScssBundle(this IAssetPipeline pipeline, string route, params string[] sourceFiles)
-        => AddScssBundle(pipeline, null, route, sourceFiles);
+    {
+        return pipeline.AddScssBundle(null, route, sourceFiles);
+    }
+
+    /// <summary>
+    /// Compile Sass or Scss files on the asset pipeline.
+    /// </summary>
+    public static IAsset CompileScss(this IAsset asset, WebOptimizerScssOptions? options = null)
+    {
+        CheckJsEngineRegistration();
+
+        asset.Processors.Add(new Compiler(asset, options));
+        return asset;
+    }
+
+    /// <summary>
+    /// Compile Sass or Scss files on the asset pipeline.
+    /// </summary>
+    public static IEnumerable<IAsset> CompileScss(this IEnumerable<IAsset> assets, WebOptimizerScssOptions? options = null)
+    {
+        CheckJsEngineRegistration();
+
+        List<IAsset> list = [];
+
+        foreach (IAsset asset in assets)
+        {
+            list.Add(asset.CompileScss(options));
+        }
+
+        return list;
+    }
 
     /// <summary>
     /// Compiles .scss files into CSS and makes them servable in the browser.
     /// </summary>
     /// <param name="pipeline">The asset pipeline.</param>
+    /// <param name="options"></param>
     public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimizerScssOptions? options = null)
     {
         CheckJsEngineRegistration();
@@ -82,13 +81,14 @@ public static class PipelineExtensions
                        .CompileScss(options)
                        .FingerprintUrls()
                        .AddResponseHeader("X-Content-Type-Options", "nosniff")
-                       .minifyCssWithOptions(options);
+                       .MinifyCssWithOptions(options);
     }
 
     /// <summary>
     /// Compiles the specified .scss files into CSS and makes them servable in the browser.
     /// </summary>
     /// <param name="pipeline">The pipeline object.</param>
+    /// <param name="options"></param>
     /// <param name="sourceFiles">A list of relative file names of the sources to compile.</param>
     public static IEnumerable<IAsset> CompileScssFiles(this IAssetPipeline pipeline, WebOptimizerScssOptions? options = null, params string[] sourceFiles)
     {
@@ -98,23 +98,7 @@ public static class PipelineExtensions
                        .CompileScss(options)
                        .FingerprintUrls()
                        .AddResponseHeader("X-Content-Type-Options", "nosniff")
-                       .minifyCssWithOptions(options);
-    }
-
-    private static IEnumerable<IAsset> minifyCssWithOptions(this IEnumerable<IAsset> assets, WebOptimizerScssOptions options)
-    {
-        if (options?.MinifyCss ?? true)
-            return assets.MinifyCss();
-        else
-            return assets;
-    }
-
-    private static IAsset minifyCssWithOptions(this IAsset asset, WebOptimizerScssOptions options)
-    {
-        if (options?.MinifyCss ?? true)
-            return asset.MinifyCss();
-        else
-            return asset;
+                       .MinifyCssWithOptions(options);
     }
 
     private static void CheckJsEngineRegistration()
@@ -125,10 +109,19 @@ public static class PipelineExtensions
         }
 
         IJsEngineSwitcher engineSwitcher = JsEngineSwitcher.Current;
-        if (engineSwitcher == null
-            || !engineSwitcher.EngineFactories.Any(e => e.EngineName == engineSwitcher.DefaultEngineName))
+        if (engineSwitcher is null || !engineSwitcher.EngineFactories.Any(e => e.EngineName == engineSwitcher.DefaultEngineName))
         {
             throw new InvalidOperationException("JS engine is not registered.");
         }
+    }
+
+    private static IEnumerable<IAsset> MinifyCssWithOptions(this IEnumerable<IAsset> assets, WebOptimizerScssOptions? options)
+    {
+        return options?.MinifyCss ?? true ? assets.MinifyCss() : assets;
+    }
+
+    private static IAsset MinifyCssWithOptions(this IAsset asset, WebOptimizerScssOptions? options)
+    {
+        return options?.MinifyCss ?? true ? asset.MinifyCss() : asset;
     }
 }
