@@ -1,55 +1,65 @@
 ﻿using DartSassHost;
 using JavaScriptEngineSwitcher.Core.Resources;
 using Microsoft.Extensions.FileProviders;
-using System;
-using System.IO;
 using System.Text;
 using WebOptimizer.Utils;
 
-namespace WebOptimizer.Sass
+namespace WebOptimizer.Sass;
+
+/// <summary>
+/// The file provider file manager uses an <see cref="IFileProvider"/> to manage files.
+/// Implements the <see cref="IFileManager" />
+/// </summary>
+/// <seealso cref="IFileManager" />
+public class FileProviderFileManager(IFileProvider fileProvider) : IFileManager
 {
-    public class FileProviderFileManager : IFileManager
+    /// <inheritdoc/>
+    public bool SupportsVirtualPaths => false;
+
+    /// <inheritdoc/>
+    public bool FileExists(string path)
     {
-        private readonly IFileProvider _fileProvider;
+        return GetFileInfo(path).Exists;
+    }
 
-        public FileProviderFileManager(IFileProvider fileProvider)
+    /// <inheritdoc/>
+    public string GetCurrentDirectory()
+    {
+        return string.Empty;
+    }
+
+    /// <inheritdoc/>
+    public bool IsAppRelativeVirtualPath(string path)
+    {
+        throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    public string ReadFile(string path)
+    {
+        IFileInfo file = GetFileInfo(path);
+        using Stream stream = file.CreateReadStream();
+        using StreamReader reader = new(stream, Encoding.UTF8);
+        return reader.ReadToEnd();
+    }
+
+    /// <inheritdoc/>
+    public string ToAbsoluteVirtualPath(string path)
+    {
+        throw new NotSupportedException();
+    }
+
+    private IFileInfo GetFileInfo(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
         {
-            _fileProvider = fileProvider;
+            throw new ArgumentNullException(
+                nameof(path),
+                string.Format(Strings.Common_ArgumentIsNull, nameof(path))
+            );
         }
 
-        public bool SupportsVirtualPaths => false;
-
-        public bool FileExists(string path)
-        {
-            return GetFileInfo(path).Exists;
-        }
-
-        public string GetCurrentDirectory() => string.Empty;
-
-        public bool IsAppRelativeVirtualPath(string path) => throw new NotSupportedException();
-
-        public string ReadFile(string path)
-        {
-            IFileInfo file = GetFileInfo(path);
-            using Stream stream = file.CreateReadStream();
-            using StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-            return reader.ReadToEnd();
-        }
-
-        public string ToAbsoluteVirtualPath(string path) => throw new NotSupportedException();
-
-        private IFileInfo GetFileInfo(string path)
-        {
-            if (path == null)
-            {
-                throw new ArgumentNullException(
-                    nameof(path),
-                    string.Format(Strings.Common_ArgumentIsNull, nameof(path))
-                );
-            }
-
-            var adjustedPath = UrlPathUtils.Normalize(path.Replace(Path.DirectorySeparatorChar, '/'));
-            return _fileProvider.GetFileInfo(adjustedPath);
-        }
+        string adjustedPath = UrlPathUtils.Normalize(path.Replace(Path.DirectorySeparatorChar, '/'));
+        return fileProvider.GetFileInfo(adjustedPath);
     }
 }
