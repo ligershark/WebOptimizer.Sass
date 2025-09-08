@@ -10,23 +10,16 @@ public class WebOptimizerScssOptions
     /// <summary>
     /// Gets or sets the maximum number of digits after the decimal. Default is 5.
     /// </summary>
-    /// <remarks>
-    /// TODO: the C function is not working
-    /// </remarks>
     public int Precision { get; set; } = 5;
 
     /// <summary>
-    /// Gets or sets the output style. Default is <see cref="ScssOutputStyle.Nested"/>
+    /// Gets or sets the output style. Default is <see cref="OutputStyle.Expanded"/>
     /// </summary>
     public OutputStyle OutputStyle { get; set; } = OutputStyle.Expanded;
 
     /// <summary>
-    /// Gets or sets a value indicating whether to generate source map (result in <see cref="ScssResult.SourceMap"/>
+    /// Gets or sets a value indicating whether to generate source map. Default is <c>false</c>
     /// </summary>
-    /// <remarks>
-    /// Note that <see cref="OutputFile"/> should be setup. <see cref="SourceMapFile"/> will then automatically
-    /// map to <see cref="OutputFile"/> + ".map" unless specified.
-    /// </remarks>
     public bool GenerateSourceMap { get; set; } = false;
 
     /// <summary>
@@ -47,18 +40,15 @@ public class WebOptimizerScssOptions
     /// <summary>
     /// Gets or sets a value indicating whether to enable or disable the inclusion of source map information in the output file. Default is <c>false</c>
     /// </summary>
-    /// <remarks>
-    /// If this is set to <c>true</c>, the <see cref="OutputFile"/> must be setup to avoid unexpected behavior.
-    /// </remarks>
     public bool OmitSourceMapUrl { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the scss content to transform is using indented syntax.
+    /// Gets or sets a value indicating whether the scss content to transform is using indented syntax. Default is <c>false</c>
     /// </summary>
-    public bool IsIndentedSyntaxSource { get; set; }
+    public bool IsIndentedSyntaxSource { get; set; } = false;
 
     /// <summary>
-    /// Gets or sets the indent string. Default is 2 spaces.
+    /// Gets or sets the indent string. Default is 2 spaces
     /// </summary>
     public string Indent { get; set; } = "  ";
 
@@ -68,22 +58,17 @@ public class WebOptimizerScssOptions
     public string Linefeed { get; set; } = "\n";
 
     /// <summary>
-    /// Gets or sets the value that will be emitted as sourceRoot in the source map information. Default is null.
+    /// Gets or sets the value that will be emitted as <c>sourceRoot</c> in the source map information. Default is empty string
     /// </summary>
-    public string SourceMapRoot { get; set; }
+    public string SourceMapRoot { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets the include paths that will be used to search for @import directives in scss content.
+    /// Gets the include paths that will be used to search for @import directives in scss content. Default is empty list
     /// </summary>
     public List<string> IncludePaths { get; } = [];
 
-    ///// <summary>
-    ///// Gets or sets a dynamic delegate used to resolve imports dynamically.
-    ///// </summary>
-    //public TryImportDelegate TryImport { get; set; }
-
     /// <summary>
-    /// Gets or sets the option to minify the resulting css.
+    /// Gets or sets the option to minify the resulting css. Default is <c>true</c>
     /// </summary>
     public bool MinifyCss { get; set; } = true;
 }
