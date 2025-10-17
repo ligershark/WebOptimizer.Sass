@@ -21,7 +21,7 @@
     <Product>LigerShark.WebOptimizer.Sass</Product>
     <RepositoryUrl>https://github.com/ligershark/WebOptimizer.Sass</RepositoryUrl>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <TargetFrameworks>net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <Version>3.0.0</Version>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
