@@ -23,8 +23,8 @@ Then you need to install one of the NuGet packages containing a JS engine provid
 After installing the packages, you will need to [register the default JS engine](https://github.com/Taritsyn/JavaScriptEngineSwitcher/wiki/Registration-of-JS-engines#aspnet-core).
 
 ## Versions
-Master is being updated for ```ASP.NET Core 3.0```
-For ```ASP.NET Core 2.x```, use the **[2.0 branch.](https://github.com/ligershark/WebOptimizer.Sass/tree/2.0)**
+The `master` branch is being updated for currently supported .NET releases (currently, .NET 8.0 and .NET 9.0).
+For ```ASP.NET Core 2.x```, use the **[`2.0` branch.](https://github.com/ligershark/WebOptimizer.Sass/tree/2.0)**
 
 ## Usage
 Here's an example of how to compile `a.scss` and `b.scss` from inside the wwwroot folder and bundle them into a single .css file called `/all.css`:
