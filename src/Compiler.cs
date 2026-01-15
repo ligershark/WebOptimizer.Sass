@@ -56,16 +56,6 @@ public partial class Compiler(IAsset asset, WebOptimizerScssOptions? options = n
                     settings.OutputStyle = options.OutputStyle;
                     settings.IncludePaths = [.. settings.IncludePaths, .. options.IncludePaths];
                     settings.SourceMap = options.GenerateSourceMap;
-                    settings.IndentType = options.Indent.Contains('\t') ? IndentType.Tab : IndentType.Space;
-                    settings.IndentWidth = options.Indent.Length;
-                    settings.LineFeedType = options.Linefeed switch
-                    {
-                        "\n" => LineFeedType.Lf,
-                        "\r" => LineFeedType.Cr,
-                        "\r\n" => LineFeedType.CrLf,
-                        "\n\r" => LineFeedType.LfCr,
-                        _ => throw new NotSupportedException()
-                    };
                     settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
                     settings.SourceMapIncludeContents = options.SourceMapContents;
                     settings.InlineSourceMap = options.SourceMapEmbed;

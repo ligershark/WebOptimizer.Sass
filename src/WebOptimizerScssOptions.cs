@@ -10,6 +10,7 @@ public class WebOptimizerScssOptions
     /// <summary>
     /// Gets or sets the maximum number of digits after the decimal. Default is 5.
     /// </summary>
+    [Obsolete]
     public int Precision { get; set; } = 5;
 
     /// <summary>
@@ -25,6 +26,7 @@ public class WebOptimizerScssOptions
     /// <summary>
     /// Gets or sets a value indicating whether to enable additional debugging information in the output file as CSS comments. Default is <c>false</c>
     /// </summary>
+    [Obsolete]
     public bool SourceComments { get; set; } = false;
 
     /// <summary>
@@ -50,11 +52,13 @@ public class WebOptimizerScssOptions
     /// <summary>
     /// Gets or sets the indent string. Default is 2 spaces
     /// </summary>
+    [Obsolete]
     public string Indent { get; set; } = "  ";
 
     /// <summary>
     /// Gets or sets the linefeed. Default is LF (\n)
     /// </summary>
+    [Obsolete]
     public string Linefeed { get; set; } = "\n";
 
     /// <summary>
