@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -47,6 +48,7 @@ public partial class Compiler(IAsset asset, WebOptimizerScssOptions? options = n
                 IServiceProvider serviceProvider = context.HttpContext.RequestServices;
                 IWebHostEnvironment env = (IWebHostEnvironment)serviceProvider.GetRequiredService(typeof(IWebHostEnvironment));
                 IJsEngineSwitcher engineSwitcher = (IJsEngineSwitcher)serviceProvider.GetRequiredService(typeof(IJsEngineSwitcher));
+                ILogger<Compiler> logger = (ILogger<Compiler>)serviceProvider.GetRequiredService(typeof(ILogger<Compiler>));
 
                 IFileProvider fileProvider = context.Asset.GetFileProvider(env);
 
@@ -54,12 +56,17 @@ public partial class Compiler(IAsset asset, WebOptimizerScssOptions? options = n
                 if (options is not null)
                 {
                     settings.OutputStyle = options.OutputStyle;
-                    settings.IncludePaths = [.. settings.IncludePaths, .. options.IncludePaths];
+                    settings.IncludePaths = options.IncludePaths;
                     settings.SourceMap = options.GenerateSourceMap;
                     settings.OmitSourceMapUrl = options.OmitSourceMapUrl;
                     settings.SourceMapIncludeContents = options.SourceMapContents;
                     settings.InlineSourceMap = options.SourceMapEmbed;
                     settings.SourceMapRootPath = options.SourceMapRoot;
+                    settings.WarningLevel = options.WarningLevel;
+                    settings.QuietDependencies = options.QuietDependencies;
+                    settings.FatalDeprecations = options.FatalDeprecations;
+                    settings.FutureDeprecations = options.FutureDeprecations;
+                    settings.SilenceDeprecations = options.SilenceDeprecations;
                 }
 
                 IFileManager fileManager = new FileProviderFileManager(fileProvider);
@@ -74,6 +81,11 @@ public partial class Compiler(IAsset asset, WebOptimizerScssOptions? options = n
                         null,
                         settings);
                     content[route] = result.CompiledContent.AsByteArray();
+
+                    foreach (ProblemInfo warning in result.Warnings)
+                    {
+                        logger.LogWarning(warning.Message);
+                    }
                 }
 
                 context.Content = content;

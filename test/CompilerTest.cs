@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Moq;
 using System;
@@ -41,6 +42,7 @@ namespace WebOptimizer.Sass.Test
         {
             var context = new Mock<IAssetContext>().SetupAllProperties();
             var asset = new Mock<IAsset>().SetupAllProperties();
+            var logger = new Mock<ILogger<Compiler>>();
             var processor = new Compiler(asset.Object);
             var env = new Mock<IWebHostEnvironment>();
             var fileProvider = new Mock<IFileProvider>();
@@ -72,6 +74,9 @@ namespace WebOptimizer.Sass.Test
 
             context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(IJsEngineSwitcher)))
                    .Returns(JsEngineSwitcher.Current);
+
+            context.Setup(s => s.HttpContext.RequestServices.GetService(typeof(ILogger<Compiler>)))
+                   .Returns(logger.Object);
 
             context.SetupGet(s => s.Asset)
                           .Returns(asset.Object);
