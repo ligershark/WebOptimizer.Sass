@@ -69,7 +69,50 @@ public class WebOptimizerScssOptions
     /// <summary>
     /// Gets the include paths that will be used to search for @import directives in scss content. Default is empty list
     /// </summary>
-    public List<string> IncludePaths { get; } = [];
+    public List<string> IncludePaths { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the warning level. Default is <see cref="WarningLevel.Default"/>
+    /// </summary>
+    /// <remarks>
+    /// In a production environment, it is recommended to use a <see cref="WarningLevel.Quiet"/> level.
+    /// </remarks>
+    public WarningLevel WarningLevel { get; set; } = WarningLevel.Default;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to silence compiler warnings from stylesheets loaded by using
+    /// the <see cref="IncludePaths"/> property. Default is <c>false</c>
+    /// </summary>
+    public bool QuietDependencies { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the list of deprecations to treat as fatal. Default is empty list
+    /// </summary>
+    /// <remarks>
+    /// <para>If a deprecation warning of any provided ID is encountered during compilation, the compiler will
+    /// error instead.</para>
+    /// <para>If a version is provided, then all deprecations that were active in that compiler version will be
+    /// treated as fatal.</para>
+    /// </remarks>
+    public List<string> FatalDeprecations { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of future deprecations to opt into early. Default is empty list
+    /// </summary>
+    /// <remarks>
+    /// Future deprecations, whose IDs have been passed here, will be treated as active by the compiler,
+    /// emitting warnings as necessary.
+    /// </remarks>
+    public List<string> FutureDeprecations { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of active deprecations to ignore. Default is empty list
+    /// </summary>
+    /// <remarks>
+    /// If a deprecation warning of any provided ID is encountered during compilation, the compiler will
+    /// ignore it instead.
+    /// </remarks>
+    public List<string> SilenceDeprecations { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the option to minify the resulting css. Default is <c>true</c>
